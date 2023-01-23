@@ -1,0 +1,12 @@
+{
+  "react-native": {
+    "android_task_executor_maximum_pool_size": 10,
+    "android_task_executor_keep_alive_seconds": 3,
+    "ml_vision_face_model": true,
+    "ml_vision_ocr_model": true,
+    "ml_vision_barcode_model": true,
+
+    "ml_vision_label_model": true,
+    "ml_vision_image_label_model": true
+  }
+}

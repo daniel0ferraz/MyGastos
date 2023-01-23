@@ -1,0 +1,69 @@
+{
+  "project_info": {
+    "project_number": "1015369051307",
+    "firebase_url": "https://meus-gastos-8d822-default-rtdb.firebaseio.com",
+    "project_id": "meus-gastos-8d822",
+    "storage_bucket": "meus-gastos-8d822.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1015369051307:android:4836700a14ce5c9cf19bee",
+        "android_client_info": {
+          "package_name": "com.meus_cartoes"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1015369051307-m5qc2tepaqvpckhnuvl8ievi7o4ba7gt.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDHoJCzrE9FpP-1hhckcIGQlkgVec7G98U"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1015369051307-m5qc2tepaqvpckhnuvl8ievi7o4ba7gt.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1015369051307:android:630b766a31eb61e6f19bee",
+        "android_client_info": {
+          "package_name": "com.mygastos"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1015369051307-m5qc2tepaqvpckhnuvl8ievi7o4ba7gt.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDHoJCzrE9FpP-1hhckcIGQlkgVec7G98U"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1015369051307-m5qc2tepaqvpckhnuvl8ievi7o4ba7gt.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
