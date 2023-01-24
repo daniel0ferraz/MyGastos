@@ -1,6 +1,7 @@
-import React, {useEffect, useState} from 'react';
+import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
 
 import {
+  Dimensions,
   Image,
   Modal,
   Platform,
@@ -22,23 +23,43 @@ import {
   IconPhoto,
 } from './styles';
 
-import {firebase, FirebaseAuthTypes} from '@react-native-firebase/auth';
-import Button from '../../components/Button';
-//import ImagePicker from 'react-native-image-crop-picker';
-import Toast from 'react-native-toast-message';
 import {useNavigation} from '@react-navigation/native';
+import Button from '../../components/Button';
+import ImagePicker from 'react-native-image-crop-picker';
+import Toast from 'react-native-toast-message';
+import {firebase, FirebaseAuthTypes} from '@react-native-firebase/auth';
 
-export default function Profile() {
+import storage from '@react-native-firebase/storage';
+import BottomSheet from '@gorhom/bottom-sheet';
+import {gestureHandlerRootHOC} from 'react-native-gesture-handler';
+import {useTheme} from 'styled-components/native';
+const {width, height} = Dimensions.get('window');
+
+export function Profile() {
+  const THEME = useTheme();
   const navigation = useNavigation();
-  const user = firebase.auth().currentUser as FirebaseAuthTypes.UserInfo;
+  const user = firebase.auth().currentUser;
 
   const [userInfo, setUserInfo] = useState({
-    name: user.displayName || '',
+    name: user?.displayName || '',
     avatar: '',
   });
   const [isUpdate, setIsUpdate] = useState(false);
 
-  const choosePhotoFromLibrary = () => {};
+  const choosePhotoFromLibrary = () => {
+    ImagePicker.openPicker({
+      width: 300,
+      height: 400,
+      cropping: true,
+    }).then(image => {
+      console.log(image.path);
+      setUserInfo({
+        ...userInfo,
+        avatar: image.path,
+      });
+      console.log(image);
+    });
+  };
 
   const updateProfileUser = async () => {
     setIsUpdate(true);
@@ -47,6 +68,8 @@ export default function Profile() {
         displayName: userInfo.name,
         photoURL: userInfo.avatar,
       });
+
+      await firebase.utils.reload();
 
       Toast.show({
         text1: 'Dados atualizados com sucesso!',
@@ -66,6 +89,80 @@ export default function Profile() {
     }
   };
 
+  const uploadToFirebase = async () => {
+    const reference = storage().ref(`profile/${userInfo.name}`);
+    const {avatar} = userInfo;
+
+    const pathToFile = `${avatar}`;
+
+    await reference.putFile(pathToFile);
+
+    const task = reference.putFile(pathToFile);
+
+    task.on('state_changed', taskSnapshot => {
+      Toast.show({
+        text1: 'updload',
+        visibilityTime: 5000,
+        text2: `${taskSnapshot.bytesTransferred} transferido de ${taskSnapshot.totalBytes}`,
+        position: 'bottom',
+      });
+    });
+    task.then(() => {
+      Toast.show({
+        text1: 'Imagem carregada com sucesso!',
+        visibilityTime: 5000,
+        type: 'success',
+        position: 'bottom',
+      });
+    });
+  };
+
+  const updateProfileUser2 = async () => {
+    try {
+      // storage get reference download
+      const reference = storage().ref(`profile/${userInfo.name}`);
+      const {avatar} = userInfo;
+
+      const task = reference.putFile(avatar);
+      console.log('task', task);
+      task.on('state_changed', taskSnapshot => {
+        Toast.show({
+          text1: 'updload',
+          visibilityTime: 5000,
+          text2: `${taskSnapshot.bytesTransferred} transferido de ${taskSnapshot.totalBytes}`,
+          position: 'bottom',
+        });
+      });
+      task.then(() => {
+        Toast.show({
+          text1: 'Imagem carregada com sucesso!',
+          visibilityTime: 5000,
+          type: 'success',
+          position: 'bottom',
+        });
+      });
+
+      const ref = firebase
+        .storage()
+        .ref(`profile/${userInfo.name}`)
+        .getDownloadURL()
+        .then(url => {
+          console.log('urlBaixadoa', url);
+        });
+
+      /*  await firebase.auth().currentUser?.updateProfile({
+        displayName: userInfo.name,
+        photoURL: userInfo.avatar,
+      });*/
+      // reload
+      await firebase.utils.reload();
+    } catch (error) {
+      console.log('catch', error);
+    }
+  };
+
+  const bottomSheetRef = useRef<BottomSheet>(null);
+
   return (
     <Container>
       <Toast />
@@ -82,7 +179,11 @@ export default function Profile() {
             resizeMode="contain"
           />
         </BoxProfile>
-        <IconPhoto onPress={choosePhotoFromLibrary}>
+        <IconPhoto
+          activeOpacity={0.9}
+          onPress={() => {
+            bottomSheetRef.current?.expand();
+          }}>
           <Icon.Camera size={29} color={'#ffff'} />
         </IconPhoto>
       </ContentPhoto>
@@ -98,7 +199,7 @@ export default function Profile() {
       />
 
       <InputCustom
-        value={user.email}
+        value={user?.email}
         Icon={<Icon.EnvelopeSimple />}
         placeholder="E-mail"
         editable={false}
@@ -112,10 +213,47 @@ export default function Profile() {
           }}
           size="Large"
           isLoading={isUpdate}
-          onPress={updateProfileUser}>
+          onPress={updateProfileUser2}>
           Atualizar
         </Button>
       </BtnSpace>
+
+      <BottomSheet
+        ref={bottomSheetRef}
+        index={-1}
+        snapPoints={[3, height - 620]}
+        backgroundStyle={{backgroundColor: THEME.colors.light}}
+        handleIndicatorStyle={{backgroundColor: THEME.colors.gray600}}>
+        <View style={styles.contentContainer}>
+          <View style={styles.contentContent}>
+            <IconPhoto>
+              <Icon.Camera size={29} color={THEME.colors.light} />
+            </IconPhoto>
+            <IconPhoto>
+              <Icon.Image size={29} color={THEME.colors.light} />
+            </IconPhoto>
+            <IconPhoto onPress={() => bottomSheetRef.current?.close()}>
+              <Icon.XCircle size={29} color={THEME.colors.light} />
+            </IconPhoto>
+          </View>
+        </View>
+      </BottomSheet>
     </Container>
   );
 }
+
+const styles = StyleSheet.create({
+  contentContainer: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  contentContent: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    width: '50%',
+  },
+});
+
+export default gestureHandlerRootHOC(Profile);
