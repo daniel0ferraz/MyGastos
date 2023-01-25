@@ -47,6 +47,8 @@ export function CreateNewAccount() {
 
   const choosePhotoFromLibrary = () => {
     ImagePicker.openPicker({
+      height: height,
+      width: height,
       cropping: true,
     }).then(image => {
       console.log('Image: ', image);
@@ -60,6 +62,8 @@ export function CreateNewAccount() {
 
   const choosePhotoFromCamera = () => {
     ImagePicker.openCamera({
+      height: height,
+      width: height,
       cropping: true,
     }).then(image => {
       console.log(image);
@@ -118,7 +122,7 @@ export function CreateNewAccount() {
     const {avatar} = newUser;
     setLoading(true);
 
-    const ref = firebase.storage().ref(`Profile/${newUser.name}`);
+    const ref = firebase.storage().ref(`profile/${newUser.name}`);
     const path = avatar;
     const task = ref.putFile(path, {
       cacheControl: 'no-store', // disable caching
@@ -165,18 +169,13 @@ export function CreateNewAccount() {
       const url = await ref.getDownloadURL();
 
       if (url) {
-        setNewUser({
-          ...newUser,
-          photo: url,
-        });
-      }
+        console.log('url--->', url);
 
-      const newAccount = await auth().createUserWithEmailAndPassword(
-        newUser.email,
-        newUser.password,
-      );
+        const newAccount = await auth().createUserWithEmailAndPassword(
+          newUser.email,
+          newUser.password,
+        );
 
-      if (newAccount) {
         const collectionReference = firebase
           .firestore()
           .collection('users')
@@ -184,7 +183,7 @@ export function CreateNewAccount() {
 
         await collectionReference.set({
           id: newAccount.user.uid,
-          photo: newUser.photo,
+          photo: url,
           name: newUser.name,
           email: newUser.email,
           password: newUser.password,
@@ -221,7 +220,7 @@ export function CreateNewAccount() {
         <ContentPhoto>
           <BoxProfile>
             <Image
-              source={{uri: newUser.avatar}}
+              source={{uri: newUser.avatar ? newUser.avatar : null}}
               style={{height: 130, width: 130, borderRadius: 15}}
               resizeMode="contain"
             />
