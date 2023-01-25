@@ -24,7 +24,7 @@ export const TextInput = styled.TextInput`
     margin-left: 8px;
     font-family: ${theme.fonts.Lexend500};
     font-size: 16px;
-    color: ${theme.colors.gray2};
+    color: ${theme.colors.gray};
   `}
 `;
 

@@ -28,7 +28,8 @@ import ImagePicker from 'react-native-image-crop-picker';
 import firestore, {firebase} from '@react-native-firebase/firestore';
 
 import storage from '@react-native-firebase/storage';
-const {height} = Dimensions.get('window');
+import {User} from '../../@types/User';
+const {width, height} = Dimensions.get('window');
 
 export function CreateNewAccount() {
   const THEME = useTheme();
@@ -37,12 +38,10 @@ export function CreateNewAccount() {
     photo: '',
     avatar: '',
     name: '',
-    phone: '',
     email: '',
     password: '',
     confirmPassword: '',
   });
-
   const [loading, setLoading] = useState(false);
 
   const choosePhotoFromLibrary = () => {
@@ -139,32 +138,9 @@ export function CreateNewAccount() {
             photo: url,
           });
         }
-      })
-      .catch(error => {
-        console.log('error>>', error);
       });
 
     try {
-      // if (
-      //   newUser.email === '' ||
-      //   newUser.password === '' ||
-      //   newUser.confirmPassword === ''
-      // ) {
-      //   Toast.show({
-      //     text1: 'Preencha todos os campos!',
-      //     position: 'bottom',
-      //     type: 'error',
-      //   });
-      //   return;
-      // } else if (newUser.password !== newUser.confirmPassword) {
-      //   Toast.show({
-      //     text1: 'Senhas não conferem',
-      //     position: 'bottom',
-      //     type: 'error',
-      //   });
-      //   return;
-      // }
-
       await task;
       const url = await ref.getDownloadURL();
 
@@ -243,6 +219,7 @@ export function CreateNewAccount() {
             onChangeText={text => {
               setNewUser({...newUser, name: text});
             }}
+            autoCorrect={false}
           />
         </InputSpace>
 
@@ -255,9 +232,7 @@ export function CreateNewAccount() {
             }}
             Icon={<Icon.EnvelopeSimple size={28} />}
             keyboardType="email-address"
-            autoCapitalize="none"
             autoCorrect={false}
-            blurOnSubmit={false}
           />
         </InputSpace>
 
@@ -269,10 +244,11 @@ export function CreateNewAccount() {
               setNewUser({...newUser, password: text});
             }}
             Icon={<Icon.Key size={28} />}
-            keyboardType="default"
             autoCapitalize="none"
             secureTextEntry
             iconSec={true}
+            autoCorrect={false}
+            keyboardType="visible-password"
           />
         </InputSpace>
 
@@ -283,7 +259,7 @@ export function CreateNewAccount() {
             setNewUser({...newUser, confirmPassword: text});
           }}
           Icon={<Icon.Key size={28} />}
-          keyboardType="default"
+          keyboardType="visible-password"
           secureTextEntry
           iconSec={true}
         />

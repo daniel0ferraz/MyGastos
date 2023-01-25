@@ -6,6 +6,7 @@ import * as Icon from 'phosphor-react-native';
 import ListHistoric from '../../components/Historic/ListHistoric/Index';
 import IconsNav from '../../components/IconsNav';
 import {ITransactionsCard} from '../../@types/TransactionsCard';
+import {User} from '../../@types/User';
 // services
 import firestore from '@react-native-firebase/firestore';
 //Navigation
@@ -23,7 +24,7 @@ import FastImage from 'react-native-fast-image';
 export default function Dashboard() {
   const [extrato, setExtrato] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [credetial, setCredential] = useState([]);
+  const [credentials, setCredentials] = useState<User>({} as User);
   const [refreshing, setRefreshing] = useState(false);
   const [error, setError] = useState(false);
 
@@ -90,10 +91,11 @@ export default function Dashboard() {
           });
         });
         const user = data.find(
-          item => item.id === firebase.auth().currentUser?.uid,
+          (item: User) => item.id === firebase.auth().currentUser?.uid,
         );
+        console.log(user);
 
-        setCredential(user);
+        setCredentials(user);
       });
 
     const stateUser = firebase.auth().onUserChanged(user => {
@@ -112,10 +114,13 @@ export default function Dashboard() {
       <Styled.Container>
         <Styled.Header>
           <Styled.BoxContent>
-            <Styled.BoxIcon onPress={() => navigation.navigate('Profile')}>
+            <Styled.BoxIcon
+              onPress={() =>
+                navigation.navigate('Profile', {credentials: credentials})
+              }>
               <FastImage
                 source={{
-                  uri: credetial?.photo,
+                  uri: credentials.photo,
                   priority: FastImage.priority.high,
                 }}
                 style={{height: 60, width: 60, borderRadius: 8}}
@@ -125,7 +130,9 @@ export default function Dashboard() {
             <Styled.BoxInfo>
               <Styled.InfoText>Olá,</Styled.InfoText>
               <Styled.InfoPage>
-                {credetial?.name ? `${credetial.name}` : 'Atualize seus dados'}
+                {credentials?.name
+                  ? `${credentials.name}`
+                  : 'Atualize seus dados'}
               </Styled.InfoPage>
             </Styled.BoxInfo>
           </Styled.BoxContent>

@@ -98,7 +98,6 @@ export default function SignIn() {
             keyboardType="email-address"
             autoCapitalize="none"
             autoCorrect={false}
-            blurOnSubmit={false}
           />
         </InputSpace>
 
@@ -109,7 +108,7 @@ export default function SignIn() {
             setdataUser({...dataUser, password: text})
           }
           Icon={<Icon.Key size={28} />}
-          keyboardType="default"
+          keyboardType="visible-password"
           secureTextEntry
           iconSec={true}
         />

@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
 
 import {
   Dimensions,
@@ -23,29 +23,35 @@ import {
   IconPhoto,
 } from './styles';
 
-import { useNavigation } from '@react-navigation/native';
+import {useNavigation, useRoute} from '@react-navigation/native';
 import Button from '../../components/Button';
 import ImagePicker from 'react-native-image-crop-picker';
 import Toast from 'react-native-toast-message';
-import { firebase, FirebaseAuthTypes } from '@react-native-firebase/auth';
+import {firebase, FirebaseAuthTypes} from '@react-native-firebase/auth';
 
 import storage from '@react-native-firebase/storage';
-import { utils } from '@react-native-firebase/app';
 
 import BottomSheet from '@gorhom/bottom-sheet';
-import { gestureHandlerRootHOC } from 'react-native-gesture-handler';
-import { useTheme } from 'styled-components/native';
-const { width, height } = Dimensions.get('window');
+import {gestureHandlerRootHOC} from 'react-native-gesture-handler';
+import {useTheme} from 'styled-components/native';
+import {User} from '../../@types/User';
+import {NativeStackNavigationProp} from '@react-navigation/native-stack';
+
+const {width, height} = Dimensions.get('window');
 
 export function Profile() {
   const THEME = useTheme();
-  const navigation = useNavigation();
-  const user = firebase.auth().currentUser as FirebaseAuthTypes.User;
+
+  const navigation = useNavigation<NativeStackNavigationProp<any>>();
+
+  const routes = useRoute<any>();
+  const dataUser = routes.params.credentials as User;
 
   const [userInfo, setUserInfo] = useState({
-    name: user?.displayName || '',
-    avatar: user?.photoURL || '',
-    photoCapitured: '',
+    photo: dataUser?.photo || '',
+    name: dataUser?.name || '',
+    email: dataUser?.email || '',
+    phone: dataUser?.phone || '',
   });
 
   const [isUpdate, setIsUpdate] = useState(false);
@@ -53,13 +59,13 @@ export function Profile() {
 
   const choosePhotoFromLibrary = () => {
     ImagePicker.openPicker({
-      width: 1200,
-      height: 780,
+      height: height,
+      width: height,
       cropping: true,
     }).then(image => {
       setUserInfo({
         ...userInfo,
-        avatar: image.path,
+        photo: image.path,
       });
       bottomSheetRef.current?.close();
     });
@@ -67,14 +73,14 @@ export function Profile() {
 
   const choosePhotoFromCamera = () => {
     ImagePicker.openCamera({
-      width: 1200,
-      height: 780,
+      height: height,
+      width: height,
       cropping: true,
     }).then(image => {
       console.log(image);
       setUserInfo({
         ...userInfo,
-        avatar: image.path,
+        photo: image.path,
       });
       bottomSheetRef.current?.close();
     });
@@ -84,8 +90,9 @@ export function Profile() {
     setIsUpdate(true);
     setTransferred(0);
 
-    const { avatar } = userInfo;
-    const task = storage().ref(`profile/${userInfo?.name}`).putFile(avatar);
+    const task = storage()
+      .ref(`profile/${userInfo?.name}`)
+      .putFile(userInfo?.photo);
     const dowload = storage()
       .ref(`profile/${userInfo?.name}`)
       .getDownloadURL()
@@ -94,22 +101,15 @@ export function Profile() {
         if (url) {
           setUserInfo({
             ...userInfo,
-            photoCapitured: url,
+            photo: url,
           });
-
-          user?.updateProfile({
-            displayName: userInfo.name,
-            photoURL: userInfo.photoCapitured,
-          });
-
-
         }
       });
 
     task.on('state_changed', taskSnapshot => {
       setTransferred(
         Math.round(taskSnapshot.bytesTransferred / taskSnapshot.totalBytes) *
-        100,
+          100,
       );
 
       Toast.show({
@@ -151,25 +151,105 @@ export function Profile() {
     }
   };
 
+  const updateAccount = async () => {
+    const {photo} = userInfo;
+    setIsUpdate(true);
+
+    if (userInfo.name === '' || userInfo.photo === '') {
+      Toast.show({
+        text1: 'Nome ou foto não pode ser vazia!',
+        visibilityTime: 5000,
+        type: 'error',
+        position: 'bottom',
+      });
+      return;
+    }
+
+    const ref = firebase.storage().ref(`profile/${dataUser.name}`);
+    const path = photo;
+    const task = ref.putFile(path, {
+      cacheControl: 'no-store', // disable caching
+    });
+
+    const dowload = storage()
+      .ref(`${dataUser.name}`)
+      .getDownloadURL()
+      .then(url => {
+        console.log('url--->', url);
+        if (url) {
+          setUserInfo({
+            ...userInfo,
+            photo: url,
+          });
+        }
+      })
+      .catch(error => {
+        console.log('error>>', error);
+      });
+
+    try {
+      await task;
+      const url = await ref.getDownloadURL();
+
+      if (url) {
+        const collectionReference = firebase
+          .firestore()
+          .collection('users')
+          .doc(`${dataUser.id}`);
+
+        await collectionReference.update({
+          photo: url,
+          name: userInfo.name,
+        });
+
+        firebase
+          .auth()
+          ?.currentUser?.reload()
+          .then(() => {
+            Toast.show({
+              text1: 'Foto de perfil atualizada com sucesso!',
+              visibilityTime: 5000,
+              type: 'success',
+              position: 'bottom',
+            });
+
+            setUserInfo({
+              photo: '',
+              name: '',
+              email: '',
+              phone: '',
+            });
+
+            navigation.replace('Dashboard');
+          });
+      }
+    } catch (error: any) {
+      const errorCode = error.code;
+      console.log(errorCode);
+      Toast.show({
+        text1: 'VerifyErroCode(errorCode)',
+        position: 'bottom',
+        type: 'error',
+        visibilityTime: 5000,
+      });
+    } finally {
+      setIsUpdate(false);
+    }
+  };
+
   const bottomSheetRef = useRef<BottomSheet>(null);
-
-  console.log(user);
-
-
 
   return (
     <Container>
       <Toast />
-
       <Goback onPress={() => navigation.goBack()}>
         <Icon.ArrowLeft size={32} />
       </Goback>
-
       <ContentPhoto>
         <BoxProfile>
           <Image
-            source={{ uri: userInfo.avatar ? userInfo.avatar : user?.photoURL }}
-            style={{ height: 130, width: 130, borderRadius: 15 }}
+            source={{uri: userInfo.photo}}
+            style={{height: 130, width: 130, borderRadius: 15}}
             resizeMode="contain"
           />
         </BoxProfile>
@@ -181,23 +261,38 @@ export function Profile() {
           <Icon.Camera size={29} color={'#ffff'} />
         </IconPhoto>
       </ContentPhoto>
-
       <InputCustom
+        autoCorrect={false}
         value={userInfo.name}
         keyboardType="default"
         Icon={<Icon.User />}
         placeholder="Nome"
         onChangeText={text => {
-          setUserInfo({ ...userInfo, name: text });
+          setUserInfo({...userInfo, name: text});
         }}
+        textContentType="name"
       />
-
       <InputCustom
-        value={user?.email}
+        value={dataUser.email}
         Icon={<Icon.EnvelopeSimple />}
         placeholder="E-mail"
         editable={false}
-        onChangeText={text => { }}
+        onChangeText={text => {}}
+        keyboardType="email-address"
+        autoCorrect={false}
+      />
+      <InputCustom
+        value={userInfo?.phone}
+        Icon={<Icon.Phone />}
+        placeholder="Telefone"
+        type="cel-phone"
+        mask="(99) 9999-9999"
+        onChangeText={text => {
+          setUserInfo({...userInfo, phone: text});
+        }}
+        keyboardType="email-address"
+        autoCorrect={false}
+        textContentType="telephoneNumber"
       />
 
       <BtnSpace>
@@ -207,17 +302,16 @@ export function Profile() {
           }}
           size="Large"
           isLoading={isUpdate}
-          onPress={updateProfileUser}>
+          onPress={() => updateAccount()}>
           Atualizar
         </Button>
       </BtnSpace>
-
       <BottomSheet
         ref={bottomSheetRef}
         index={-1}
         snapPoints={[3, height - 620]}
-        backgroundStyle={{ backgroundColor: THEME.colors.gray }}
-        handleIndicatorStyle={{ backgroundColor: THEME.colors.white }}>
+        backgroundStyle={{backgroundColor: THEME.colors.gray}}
+        handleIndicatorStyle={{backgroundColor: THEME.colors.white}}>
         <View style={styles.contentContainer}>
           <View style={styles.contentContent}>
             <IconPhoto onPress={choosePhotoFromCamera}>
@@ -232,12 +326,6 @@ export function Profile() {
           </View>
         </View>
       </BottomSheet>
-
-      <Image
-        source={{ uri: user?.photoURL }}
-        style={{ height: 130, width: 130, borderRadius: 15 }}
-        resizeMode="contain"
-      />
     </Container>
   );
 }
