@@ -30,6 +30,8 @@ import Toast from 'react-native-toast-message';
 import {firebase, FirebaseAuthTypes} from '@react-native-firebase/auth';
 
 import storage from '@react-native-firebase/storage';
+import {utils} from '@react-native-firebase/app';
+
 import BottomSheet from '@gorhom/bottom-sheet';
 import {gestureHandlerRootHOC} from 'react-native-gesture-handler';
 import {useTheme} from 'styled-components/native';
@@ -38,41 +40,100 @@ const {width, height} = Dimensions.get('window');
 export function Profile() {
   const THEME = useTheme();
   const navigation = useNavigation();
-  const user = firebase.auth().currentUser;
+  const user = firebase.auth().currentUser as FirebaseAuthTypes.User;
 
   const [userInfo, setUserInfo] = useState({
     name: user?.displayName || '',
-    avatar: '',
+    avatar: user?.photoURL || '',
+    photoCapitured: '',
   });
+
   const [isUpdate, setIsUpdate] = useState(false);
+  const [transferred, setTransferred] = useState(0);
 
   const choosePhotoFromLibrary = () => {
     ImagePicker.openPicker({
-      width: 300,
-      height: 400,
+      width: 1200,
+      height: 780,
       cropping: true,
     }).then(image => {
-      console.log(image.path);
       setUserInfo({
         ...userInfo,
         avatar: image.path,
       });
+      bottomSheetRef.current?.close();
+    });
+  };
+
+  const choosePhotoFromCamera = () => {
+    ImagePicker.openCamera({
+      width: 1200,
+      height: 780,
+      cropping: true,
+    }).then(image => {
       console.log(image);
+      setUserInfo({
+        ...userInfo,
+        avatar: image.path,
+      });
+      bottomSheetRef.current?.close();
     });
   };
 
   const updateProfileUser = async () => {
     setIsUpdate(true);
-    try {
-      await firebase.auth().currentUser?.updateProfile({
-        displayName: userInfo.name,
-        photoURL: userInfo.avatar,
+    setTransferred(0);
+
+    const {avatar} = userInfo;
+    const task = storage().ref(`profile/${userInfo?.name}`).putFile(avatar);
+    const dowload = storage()
+      .ref(`profile/${userInfo?.name}`)
+      .getDownloadURL()
+      .then(url => {
+        console.log('url', url);
+        if (url) {
+          setUserInfo({
+            ...userInfo,
+            photoCapitured: url,
+          });
+
+          user?.updateProfile({
+            displayName: userInfo.name,
+            photoURL: userInfo.photoCapitured,
+          });
+
+          user.reload();
+        }
       });
 
-      await firebase.utils.reload();
+    task.on('state_changed', taskSnapshot => {
+      setTransferred(
+        Math.round(taskSnapshot.bytesTransferred / taskSnapshot.totalBytes) *
+          100,
+      );
 
       Toast.show({
-        text1: 'Dados atualizados com sucesso!',
+        text1: `${transferred}% Carregado`,
+        visibilityTime: 5000,
+        position: 'bottom',
+        type: 'success',
+      });
+    });
+    task.then(() => {
+      Toast.show({
+        text1: 'Imagem carregada com sucesso!',
+        visibilityTime: 5000,
+        type: 'success',
+        position: 'bottom',
+      });
+    });
+
+    try {
+      await task;
+      await dowload;
+
+      Toast.show({
+        text1: 'Foto de perfil atualizada com sucesso!',
         visibilityTime: 5000,
         type: 'success',
         position: 'bottom',
@@ -86,78 +147,7 @@ export function Profile() {
       });
     } finally {
       setIsUpdate(false);
-    }
-  };
-
-  const uploadToFirebase = async () => {
-    const reference = storage().ref(`profile/${userInfo.name}`);
-    const {avatar} = userInfo;
-
-    const pathToFile = `${avatar}`;
-
-    await reference.putFile(pathToFile);
-
-    const task = reference.putFile(pathToFile);
-
-    task.on('state_changed', taskSnapshot => {
-      Toast.show({
-        text1: 'updload',
-        visibilityTime: 5000,
-        text2: `${taskSnapshot.bytesTransferred} transferido de ${taskSnapshot.totalBytes}`,
-        position: 'bottom',
-      });
-    });
-    task.then(() => {
-      Toast.show({
-        text1: 'Imagem carregada com sucesso!',
-        visibilityTime: 5000,
-        type: 'success',
-        position: 'bottom',
-      });
-    });
-  };
-
-  const updateProfileUser2 = async () => {
-    try {
-      // storage get reference download
-      const reference = storage().ref(`profile/${userInfo.name}`);
-      const {avatar} = userInfo;
-
-      const task = reference.putFile(avatar);
-      console.log('task', task);
-      task.on('state_changed', taskSnapshot => {
-        Toast.show({
-          text1: 'updload',
-          visibilityTime: 5000,
-          text2: `${taskSnapshot.bytesTransferred} transferido de ${taskSnapshot.totalBytes}`,
-          position: 'bottom',
-        });
-      });
-      task.then(() => {
-        Toast.show({
-          text1: 'Imagem carregada com sucesso!',
-          visibilityTime: 5000,
-          type: 'success',
-          position: 'bottom',
-        });
-      });
-
-      const ref = firebase
-        .storage()
-        .ref(`profile/${userInfo.name}`)
-        .getDownloadURL()
-        .then(url => {
-          console.log('urlBaixadoa', url);
-        });
-
-      /*  await firebase.auth().currentUser?.updateProfile({
-        displayName: userInfo.name,
-        photoURL: userInfo.avatar,
-      });*/
-      // reload
-      await firebase.utils.reload();
-    } catch (error) {
-      console.log('catch', error);
+      setTransferred(0);
     }
   };
 
@@ -213,7 +203,7 @@ export function Profile() {
           }}
           size="Large"
           isLoading={isUpdate}
-          onPress={updateProfileUser2}>
+          onPress={updateProfileUser}>
           Atualizar
         </Button>
       </BtnSpace>
@@ -222,14 +212,14 @@ export function Profile() {
         ref={bottomSheetRef}
         index={-1}
         snapPoints={[3, height - 620]}
-        backgroundStyle={{backgroundColor: THEME.colors.light}}
-        handleIndicatorStyle={{backgroundColor: THEME.colors.gray600}}>
+        backgroundStyle={{backgroundColor: THEME.colors.gray}}
+        handleIndicatorStyle={{backgroundColor: THEME.colors.white}}>
         <View style={styles.contentContainer}>
           <View style={styles.contentContent}>
-            <IconPhoto>
+            <IconPhoto onPress={choosePhotoFromCamera}>
               <Icon.Camera size={29} color={THEME.colors.light} />
             </IconPhoto>
-            <IconPhoto>
+            <IconPhoto onPress={choosePhotoFromLibrary}>
               <Icon.Image size={29} color={THEME.colors.light} />
             </IconPhoto>
             <IconPhoto onPress={() => bottomSheetRef.current?.close()}>

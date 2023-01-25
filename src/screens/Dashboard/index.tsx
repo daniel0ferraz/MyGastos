@@ -79,7 +79,6 @@ export default function Dashboard() {
     const stateUser = firebase.auth().onUserChanged(user => {
       if (user) {
         setUserInfo(user);
-        //firebase.auth().currentUser?.reload();
       }
     });
 
@@ -98,7 +97,7 @@ export default function Dashboard() {
               {userInfo?.photoURL ? (
                 <>
                   <Image
-                    source={{uri: userInfo?.photoURL}}
+                    source={{uri: userInfo.photoURL}}
                     style={{height: 60, width: 60, borderRadius: 8}}
                     resizeMode="contain"
                   />
