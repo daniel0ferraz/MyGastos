@@ -18,11 +18,12 @@ import {formatToBRL} from 'brazilian-values';
 import Loading from '../../components/Loading';
 import Error from '../../components/Error';
 import auth, {firebase, FirebaseAuthTypes} from '@react-native-firebase/auth';
+import FastImage from 'react-native-fast-image';
 
 export default function Dashboard() {
   const [extrato, setExtrato] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [userInfo, setUserInfo] = useState<FirebaseAuthTypes.User | null>(null);
+  const [credetial, setCredential] = useState([]);
   const [refreshing, setRefreshing] = useState(false);
   const [error, setError] = useState(false);
 
@@ -76,9 +77,27 @@ export default function Dashboard() {
         setRefreshing(false);
       });
 
+    firestore()
+      .collection('users')
+      .where('id', '==', firebase.auth().currentUser?.uid)
+      .get()
+      .then(querySnapshot => {
+        const data: any = [];
+        querySnapshot.forEach(documentSnapshot => {
+          data.push({
+            ...documentSnapshot.data(),
+            id: documentSnapshot.id,
+          });
+        });
+        const user = data.find(
+          item => item.id === firebase.auth().currentUser?.uid,
+        );
+
+        setCredential(user);
+      });
+
     const stateUser = firebase.auth().onUserChanged(user => {
       if (user) {
-        setUserInfo(user);
       }
     });
 
@@ -94,24 +113,19 @@ export default function Dashboard() {
         <Styled.Header>
           <Styled.BoxContent>
             <Styled.BoxIcon onPress={() => navigation.navigate('Profile')}>
-              {userInfo?.photoURL ? (
-                <>
-                  <Image
-                    source={{uri: userInfo.photoURL}}
-                    style={{height: 60, width: 60, borderRadius: 8}}
-                    resizeMode="contain"
-                  />
-                </>
-              ) : (
-                <Icon.User size={32} color={THEME.colors.gray} />
-              )}
+              <FastImage
+                source={{
+                  uri: credetial?.photo,
+                  priority: FastImage.priority.high,
+                }}
+                style={{height: 60, width: 60, borderRadius: 8}}
+                resizeMode={FastImage.resizeMode.contain}
+              />
             </Styled.BoxIcon>
             <Styled.BoxInfo>
               <Styled.InfoText>Olá,</Styled.InfoText>
               <Styled.InfoPage>
-                {userInfo?.displayName
-                  ? `${userInfo.displayName}`
-                  : 'Atualize seus dados'}
+                {credetial?.name ? `${credetial.name}` : 'Atualize seus dados'}
               </Styled.InfoPage>
             </Styled.BoxInfo>
           </Styled.BoxContent>

@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
 import {
   Dimensions,
@@ -23,19 +23,19 @@ import {
   IconPhoto,
 } from './styles';
 
-import {useNavigation} from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/native';
 import Button from '../../components/Button';
 import ImagePicker from 'react-native-image-crop-picker';
 import Toast from 'react-native-toast-message';
-import {firebase, FirebaseAuthTypes} from '@react-native-firebase/auth';
+import { firebase, FirebaseAuthTypes } from '@react-native-firebase/auth';
 
 import storage from '@react-native-firebase/storage';
-import {utils} from '@react-native-firebase/app';
+import { utils } from '@react-native-firebase/app';
 
 import BottomSheet from '@gorhom/bottom-sheet';
-import {gestureHandlerRootHOC} from 'react-native-gesture-handler';
-import {useTheme} from 'styled-components/native';
-const {width, height} = Dimensions.get('window');
+import { gestureHandlerRootHOC } from 'react-native-gesture-handler';
+import { useTheme } from 'styled-components/native';
+const { width, height } = Dimensions.get('window');
 
 export function Profile() {
   const THEME = useTheme();
@@ -84,7 +84,7 @@ export function Profile() {
     setIsUpdate(true);
     setTransferred(0);
 
-    const {avatar} = userInfo;
+    const { avatar } = userInfo;
     const task = storage().ref(`profile/${userInfo?.name}`).putFile(avatar);
     const dowload = storage()
       .ref(`profile/${userInfo?.name}`)
@@ -102,14 +102,14 @@ export function Profile() {
             photoURL: userInfo.photoCapitured,
           });
 
-          user.reload();
+
         }
       });
 
     task.on('state_changed', taskSnapshot => {
       setTransferred(
         Math.round(taskSnapshot.bytesTransferred / taskSnapshot.totalBytes) *
-          100,
+        100,
       );
 
       Toast.show({
@@ -153,6 +153,10 @@ export function Profile() {
 
   const bottomSheetRef = useRef<BottomSheet>(null);
 
+  console.log(user);
+
+
+
   return (
     <Container>
       <Toast />
@@ -164,8 +168,8 @@ export function Profile() {
       <ContentPhoto>
         <BoxProfile>
           <Image
-            source={{uri: userInfo.avatar ? userInfo.avatar : user?.photoURL}}
-            style={{height: 130, width: 130, borderRadius: 15}}
+            source={{ uri: userInfo.avatar ? userInfo.avatar : user?.photoURL }}
+            style={{ height: 130, width: 130, borderRadius: 15 }}
             resizeMode="contain"
           />
         </BoxProfile>
@@ -184,7 +188,7 @@ export function Profile() {
         Icon={<Icon.User />}
         placeholder="Nome"
         onChangeText={text => {
-          setUserInfo({...userInfo, name: text});
+          setUserInfo({ ...userInfo, name: text });
         }}
       />
 
@@ -193,7 +197,7 @@ export function Profile() {
         Icon={<Icon.EnvelopeSimple />}
         placeholder="E-mail"
         editable={false}
-        onChangeText={text => {}}
+        onChangeText={text => { }}
       />
 
       <BtnSpace>
@@ -212,8 +216,8 @@ export function Profile() {
         ref={bottomSheetRef}
         index={-1}
         snapPoints={[3, height - 620]}
-        backgroundStyle={{backgroundColor: THEME.colors.gray}}
-        handleIndicatorStyle={{backgroundColor: THEME.colors.white}}>
+        backgroundStyle={{ backgroundColor: THEME.colors.gray }}
+        handleIndicatorStyle={{ backgroundColor: THEME.colors.white }}>
         <View style={styles.contentContainer}>
           <View style={styles.contentContent}>
             <IconPhoto onPress={choosePhotoFromCamera}>
@@ -228,6 +232,12 @@ export function Profile() {
           </View>
         </View>
       </BottomSheet>
+
+      <Image
+        source={{ uri: user?.photoURL }}
+        style={{ height: 130, width: 130, borderRadius: 15 }}
+        resizeMode="contain"
+      />
     </Container>
   );
 }
