@@ -13,43 +13,39 @@ const {width} = Dimensions.get('window');
 export default function IconsNav() {
   const navigation = useNavigation<NativeStackNavigationProp<any>>();
 
-  // const Itens = [
-  //   {
-  //     id: 1,
-  //     icon: <Icon.ShoppingBagOpen size={32} />,
-  //     name: "Compras"
-  //   }, {
-  //     id: 2,
-  //     icon: <Icon.ShoppingBagOpen size={32} />,
-  //     name: "Cartões"
-  //   }, {
-  //     id: 3,
-  //     icon: "",
-  //     name: "..."
-  //   },
-  //   {
-  //     id: 4,
-  //     icon: "",
-  //     name: "..."
-  //   }
-
-  // ]
-
   return (
-    <Styled.Container>
+    <Styled.Container
+      style={{
+        shadowColor: '#000',
+        shadowOffset: {
+          width: 0,
+          height: 7,
+        },
+        shadowOpacity: 0.58,
+        shadowRadius: 16.0,
+
+        elevation: 15,
+      }}>
       <Styled.Content>
         <Styled.BoxIcons
           onPress={() => navigation.navigate('RegisterNewExpense')}>
-          <Icon.Wallet size={32} />
+          <Icon.Wallet size={25} />
         </Styled.BoxIcons>
         <Styled.Label>Carteira</Styled.Label>
       </Styled.Content>
 
       <Styled.Content>
         <Styled.BoxIcons onPress={() => navigation.navigate('Resume')}>
-          <Icon.ChartLineUp size={32} />
+          <Icon.ChartLineUp size={25} />
         </Styled.BoxIcons>
         <Styled.Label>Resumo</Styled.Label>
+      </Styled.Content>
+
+      <Styled.Content>
+        <Styled.BoxIcons onPress={() => navigation.navigate('Resume')}>
+          <Icon.AndroidLogo size={25} />
+        </Styled.BoxIcons>
+        <Styled.Label>...</Styled.Label>
       </Styled.Content>
     </Styled.Container>
   );

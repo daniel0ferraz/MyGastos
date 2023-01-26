@@ -1,10 +1,18 @@
+import {Dimensions} from 'react-native';
 import {ms} from 'react-native-size-matters';
 import styled, {css} from 'styled-components/native';
 
 export const Container = styled.View`
-  flex-direction: row;
-  align-items: center;
-  justify-content: space-between;
+  ${({theme}) => css`
+    width: 100%;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-evenly;
+    background-color: ${theme.colors.white};
+    padding: 10px;
+    border-radius: ${ms(12)}px;
+    position: relative;
+  `}
 `;
 
 export const Content = styled.View`
@@ -14,20 +22,20 @@ export const Content = styled.View`
 
 export const BoxIcons = styled.TouchableOpacity`
   ${({theme}) => css`
-    width: ${ms(60)}px;
-    height: ${ms(60)}px;
+    width: ${ms(45)}px;
+    height: ${ms(45)}px;
     background: ${theme.colors.white};
     align-items: center;
     justify-content: center;
-    border-radius: 15px;
+    border-radius: 12px;
   `}
 `;
 
 export const Label = styled.Text`
   ${({theme}) => css`
     font-size: 15px;
-    padding-top: 11px;
+    padding-top: 5px;
     font-family: ${theme.fonts.Lexend700};
-    color: ${theme.colors.dark};
+    color: ${theme.colors.gray};
   `}
 `;

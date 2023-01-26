@@ -4,9 +4,12 @@ import styled, {css} from 'styled-components/native';
 
 export const Container = styled.View`
   ${({theme}) => css`
-    width: 100%;
+    width: 100%
+    height: ${Dimensions.get('window').height / 1.9}px;
     padding: ${ms(15)}px;
-    background: ${theme.colors.light};
+    background: ${theme.colors.gray600};
+    border-bottom-left-radius: 15px;
+    border-bottom-right-radius: 15px;
   `}
 `;
 
@@ -30,7 +33,7 @@ export const BoxInfo = styled.View`
 export const InfoText = styled.Text`
   ${({theme}) => css`
     font-size: ${theme.sizes[16]}px;
-    color: ${theme.colors.gray};
+    color: ${theme.colors.white};
     font-family: ${theme.fonts.Lexend400};
   `}
 `;
@@ -38,7 +41,7 @@ export const InfoText = styled.Text`
 export const InfoPage = styled.Text`
   ${({theme}) => css`
     font-size: ${ms(16)}px;
-    color: ${theme.colors.dark};
+    color: ${theme.colors.light};
     font-family: ${theme.fonts.Lexend700};
     padding-top: 5px;
     font
@@ -68,11 +71,48 @@ export const BtnLoggout = styled.TouchableOpacity`
 
 export const SectionCards = styled.View`
   ${({theme}) => css`
+    flex-direction: column;
+    padding-top: ${ms(12)}px;
+  `}
+`;
+
+export const RowCards = styled.View`
+  ${({theme}) => css`
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
-    padding-top: ${ms(51)}px;
+    padding-top: ${ms(25)}px;
   `}
+`;
+
+export const SectionCardTotal = styled.View`
+  ${({theme}) => css`
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding-top: ${ms(26)}px;
+  `}
+`;
+
+export const TextInfo = styled.Text`
+  ${({theme}) => css`
+    font-family: ${theme.fonts.Lexend500};
+    font-size: ${ms(17)}px;
+    color: ${theme.colors.white};
+  `}
+`;
+
+export const TextTotal = styled.Text`
+  ${({theme}) => css`
+    font-family: ${theme.fonts.Lexend600};
+    font-size: ${ms(26)}px;
+    color: ${theme.colors.light};
+  `}
+`;
+
+export const SectionMenu = styled.View`
+  margin-top: ${ms(20)}px;
+  padding: ${ms(10)}px;
 `;
 
 export const BoxExpense = styled.View`
@@ -104,15 +144,7 @@ export const ExpenseValue = styled.Text`
     font-family: ${theme.fonts.Lexend500};
     font-size: ${ms(20)}px;
     color: ${theme.colors.dark};
-    /* margin-top: ${ms(15)}; */
     padding-top: 10px;
-  `}
-`;
-
-export const SectionMenu = styled.View`
-  ${({theme}) => css`
-    padding-top: ${ms(48)}px;
-    margin-bottom: ${ms(31)}px;
   `}
 `;
 
@@ -124,38 +156,23 @@ export const TextInfoCards = styled.Text`
   `}
 `;
 
-export const ContainerCards = styled.View`
-  ${({theme}) => css`
-    width: 100%;
-    align-items: flex-start;
-    justify-content: flex-start;
-
-    padding-top: ${theme.sizes[5]}px;
-    padding-bottom: ${theme.sizes[5]}px;
-    margin-bottom: 25px;
-    margin-top: 10px;
-  `}
-`;
-
 export const SectionHistoric = styled.View`
   ${({theme}) => css`
     flex: 1;
-    width: 100%;
+    padding: ${ms(10)}px;
+    margin-top: 50px;
     background: ${theme.colors.white};
-    border-top-left-radius: 15px;
-    border-top-right-radius: 15px;
-    padding: ${theme.sizes[12]}px;
   `}
 `;
 
 export const HeaderHistoric = styled.View`
   ${({theme}) => css`
-    margin-top: 8px;
-    margin-bottom: 8px;
+    margin-top: ${ms(5)}px;
+    margin-bottom: ${ms(5)}px;
     flex-direction: row;
     align-items: center;
     justify-content: space-between;
-    padding: ${theme.sizes[12]}px;
+    padding: ${ms(12)}px;
   `}
 `;
 
@@ -172,5 +189,6 @@ export const FilterIcon = styled.TouchableOpacity``;
 export const Content = styled.View`
   ${({theme}) => css`
     flex: 1;
+    background-color: ${theme.colors.white};
   `}
 `;

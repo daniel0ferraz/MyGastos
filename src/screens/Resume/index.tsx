@@ -62,6 +62,8 @@ export default function Resume() {
       <View>
         <Text>Percentual de gastos</Text>
       </View>
+
+      <View></View>
     </View>
   );
 }

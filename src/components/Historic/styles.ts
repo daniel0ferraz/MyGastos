@@ -6,8 +6,7 @@ export const ContentItens = styled.TouchableOpacity`
     flex-direction: row;
     justify-content: space-between;
     background: ${theme.colors.white};
-    border-bottom-color: ${theme.colors.light};
-    border-bottom-width: 2px;
+
     width: 100%;
     height: ${ms(70)}px;
     padding: ${theme.sizes[9]}px;

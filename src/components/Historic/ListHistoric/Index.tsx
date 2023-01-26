@@ -22,7 +22,6 @@ export default function ListHistoric({
   atualizar,
   onAtualizar,
 }: ListHitoricProps) {
-  const dados = data ? data : [];
   function rederHistoric(item: ITransactionsCard) {
     return <Historic data={item} />;
   }
@@ -32,6 +31,7 @@ export default function ListHistoric({
       <FlatList
         decelerationRate={'normal'}
         data={data}
+        ItemSeparatorComponent={<Styled.Separator />}
         keyExtractor={(item: ITransactionsCard) => String(item?.id)}
         refreshing={atualizar}
         onRefresh={onAtualizar}

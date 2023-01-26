@@ -98,19 +98,13 @@ export default function Dashboard() {
         setCredentials(user);
       });
 
-    const stateUser = firebase.auth().onUserChanged(user => {
-      if (user) {
-      }
-    });
-
     return () => {
-      stateUser();
       subscriber();
     };
   }, []);
 
   return (
-    <SafeAreaView style={{flex: 1}}>
+    <View style={{backgroundColor: THEME.colors.white, height: '100%'}}>
       <Styled.Container>
         <Styled.Header>
           <Styled.BoxContent>
@@ -123,7 +117,7 @@ export default function Dashboard() {
                   uri: credentials.photo,
                   priority: FastImage.priority.high,
                 }}
-                style={{height: 60, width: 60, borderRadius: 8}}
+                style={{height: 60, width: 60, borderRadius: 12}}
                 resizeMode={FastImage.resizeMode.contain}
               />
             </Styled.BoxIcon>
@@ -138,38 +132,43 @@ export default function Dashboard() {
           </Styled.BoxContent>
 
           <Styled.BtnLoggout onPress={() => handleSingOut()}>
-            <Icon.SignOut size={32} color={THEME.colors.gray} />
+            <Icon.SignOut size={25} color={THEME.colors.white} />
           </Styled.BtnLoggout>
         </Styled.Header>
 
         <Styled.SectionCards>
-          <Styled.BoxExpense>
-            <Styled.ExpenseIcon>
-              <Styled.ExpenseInfo>Entradas</Styled.ExpenseInfo>
-              <Icon.CurrencyCircleDollar size={32} color={THEME.colors.green} />
-            </Styled.ExpenseIcon>
-            <Styled.ExpenseValue>
-              {formatToBRL(valorEntradas || 0)}
-            </Styled.ExpenseValue>
-          </Styled.BoxExpense>
+          <Styled.SectionCardTotal>
+            <Styled.TextInfo>Saldo</Styled.TextInfo>
+            <Styled.TextTotal>
+              {formatToBRL(valorTotal - valorDespesas)}
+            </Styled.TextTotal>
+          </Styled.SectionCardTotal>
 
-          <Styled.BoxExpense>
-            <Styled.ExpenseIcon>
-              <Styled.ExpenseInfo>Gastos</Styled.ExpenseInfo>
-              <Icon.CurrencyCircleDollar size={32} color={THEME.colors.red} />
-            </Styled.ExpenseIcon>
-            <Styled.ExpenseValue>
-              {formatToBRL(valorDespesas || 0)}
-            </Styled.ExpenseValue>
-          </Styled.BoxExpense>
+          <Styled.RowCards>
+            <Styled.BoxExpense>
+              <Styled.ExpenseIcon>
+                <Styled.ExpenseInfo>Entradas</Styled.ExpenseInfo>
+                <Icon.CurrencyCircleDollar
+                  size={32}
+                  color={THEME.colors.green}
+                />
+              </Styled.ExpenseIcon>
+              <Styled.ExpenseValue>
+                {formatToBRL(valorEntradas || 0)}
+              </Styled.ExpenseValue>
+            </Styled.BoxExpense>
+
+            <Styled.BoxExpense>
+              <Styled.ExpenseIcon>
+                <Styled.ExpenseInfo>Gastos</Styled.ExpenseInfo>
+                <Icon.CurrencyCircleDollar size={32} color={THEME.colors.red} />
+              </Styled.ExpenseIcon>
+              <Styled.ExpenseValue>
+                {formatToBRL(valorDespesas || 0)}
+              </Styled.ExpenseValue>
+            </Styled.BoxExpense>
+          </Styled.RowCards>
         </Styled.SectionCards>
-
-        <View style={{marginTop: 20}}>
-          <Styled.ExpenseInfo>
-            Saldo: {formatToBRL(valorTotal - valorDespesas)}
-          </Styled.ExpenseInfo>
-        </View>
-
         <Styled.SectionMenu>
           <IconsNav />
         </Styled.SectionMenu>
@@ -200,6 +199,6 @@ export default function Dashboard() {
           </>
         </Styled.Content>
       </Styled.SectionHistoric>
-    </SafeAreaView>
+    </View>
   );
 }
