@@ -97,8 +97,6 @@ export default function Dashboard() {
       });
   }, []);
 
-  console.log(loading);
-
   return (
     <View style={{backgroundColor: THEME.colors.white, height: '100%'}}>
       <Styled.Container>
