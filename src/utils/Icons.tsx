@@ -8,41 +8,45 @@ export const iconBuy = (data: {category: string}) => {
   const THEME = useTheme();
   switch (data?.category) {
     case 'Supermercado': {
-      return <Icon.ShoppingCart size={32} color={THEME.colors.gray} />;
+      return <Icon.ShoppingCart size={28} color={THEME.colors.gray} />;
     }
 
     case 'Roupas': {
-      return <Icon.TShirt size={32} color={THEME.colors.gray} />;
+      return <Icon.TShirt size={28} color={THEME.colors.gray} />;
     }
 
     case 'Alimentação': {
-      return <Icon.ForkKnife size={32} color={THEME.colors.gray} />;
+      return <Icon.ForkKnife size={28} color={THEME.colors.gray} />;
     }
 
     case 'Bebidas': {
-      return <Icon.Wine size={32} color={THEME.colors.gray} />;
+      return <Icon.Wine size={28} color={THEME.colors.gray} />;
+    }
+
+    case 'Estética': {
+      return <Icon.HandSoap size={28} color={THEME.colors.gray} />;
     }
 
     case 'Saúde': {
-      return <Icon.FirstAidKit size={32} color={THEME.colors.gray} />;
+      return <Icon.FirstAidKit size={28} color={THEME.colors.gray} />;
     }
 
     case 'Viagens': {
-      return <Icon.Bus size={32} color={THEME.colors.gray} />;
+      return <Icon.Bus size={28} color={THEME.colors.gray} />;
     }
 
     case 'Pix':
     case 'Salário':
     case 'Renda extra': {
-      return <Icon.CurrencyDollar size={32} color={THEME.colors.gray} />;
+      return <Icon.CurrencyDollar size={28} color={THEME.colors.gray} />;
     }
 
     case 'Boleto/Faturas mensais': {
-      return <Icon.Receipt size={32} color={THEME.colors.gray} />;
+      return <Icon.Receipt size={28} color={THEME.colors.gray} />;
     }
 
     default:
-      return;
+      return <Icon.WarningCircle size={28} color={THEME.colors.gray} />;
   }
 };
 

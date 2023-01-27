@@ -145,8 +145,6 @@ export function CreateNewAccount() {
       const url = await ref.getDownloadURL();
 
       if (url) {
-        console.log('url--->', url);
-
         const newAccount = await auth().createUserWithEmailAndPassword(
           newUser.email,
           newUser.password,

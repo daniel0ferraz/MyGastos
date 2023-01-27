@@ -13,15 +13,9 @@ import * as Styled from './styles';
 
 type ListHitoricProps = {
   data: ITransactionsCard[] | undefined;
-  atualizar?: boolean;
-  onAtualizar?: () => void;
 };
 
-export default function ListHistoric({
-  data,
-  atualizar,
-  onAtualizar,
-}: ListHitoricProps) {
+export default function ListHistoric({data}: ListHitoricProps) {
   function rederHistoric(item: ITransactionsCard) {
     return <Historic data={item} />;
   }
@@ -31,10 +25,8 @@ export default function ListHistoric({
       <FlatList
         decelerationRate={'normal'}
         data={data}
-        ItemSeparatorComponent={<Styled.Separator />}
+        ItemSeparatorComponent={() => <Styled.Separator />}
         keyExtractor={(item: ITransactionsCard) => String(item?.id)}
-        refreshing={atualizar}
-        onRefresh={onAtualizar}
         initialNumToRender={5}
         progressViewOffset={12}
         ListEmptyComponent={() => (

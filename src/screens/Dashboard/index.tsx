@@ -17,16 +17,14 @@ import * as Styled from './styles';
 import {useTheme} from 'styled-components/native';
 import {formatToBRL} from 'brazilian-values';
 import Loading from '../../components/Loading';
-import Error from '../../components/Error';
+
 import auth, {firebase, FirebaseAuthTypes} from '@react-native-firebase/auth';
 import FastImage from 'react-native-fast-image';
 
 export default function Dashboard() {
-  const [extrato, setExtrato] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [extrato, setExtrato] = useState<ITransactionsCard[]>([]);
+  const [loading, setLoading] = useState(false);
   const [credentials, setCredentials] = useState<User>({} as User);
-  const [refreshing, setRefreshing] = useState(false);
-  const [error, setError] = useState(false);
 
   const THEME = useTheme();
 
@@ -59,25 +57,26 @@ export default function Dashboard() {
   };
 
   useEffect(() => {
+    setLoading(true);
     const subscriber = firestore()
       .collection('transationCardBackup')
       .orderBy('created_at', 'desc')
       .onSnapshot(querySnapshot => {
-        const data: any = [];
-        setRefreshing(true);
-
-        querySnapshot.forEach(documentSnapshot => {
-          data.push({
-            ...documentSnapshot.data(),
-            id: documentSnapshot.id,
-          });
-        });
+        const data = querySnapshot.docs.map(doc => {
+          return {
+            id: doc.id,
+            ...doc.data(),
+          };
+        }) as ITransactionsCard[];
 
         setExtrato(data);
         setLoading(false);
-        setRefreshing(false);
       });
 
+    return () => subscriber();
+  }, []);
+
+  useEffect(() => {
     firestore()
       .collection('users')
       .where('id', '==', firebase.auth().currentUser?.uid)
@@ -93,15 +92,12 @@ export default function Dashboard() {
         const user = data.find(
           (item: User) => item.id === firebase.auth().currentUser?.uid,
         );
-        console.log(user);
 
         setCredentials(user);
       });
-
-    return () => {
-      subscriber();
-    };
   }, []);
+
+  console.log(loading);
 
   return (
     <View style={{backgroundColor: THEME.colors.white, height: '100%'}}>
@@ -177,26 +173,25 @@ export default function Dashboard() {
       <Styled.SectionHistoric>
         <Styled.HeaderHistoric>
           <Styled.TitleHistoric>Movimentações</Styled.TitleHistoric>
-          <Styled.FilterIcon onPress={() => {}}>
+          {/*  <Styled.FilterIcon onPress={() => {}}>
             <Icon.Funnel size={32} color={THEME.colors.gray} />
-          </Styled.FilterIcon>
+          </Styled.FilterIcon> */}
         </Styled.HeaderHistoric>
 
         <Styled.Content>
-          <>
-            {error && (
-              <Error
-                message={'Ops! algo deu errado :('}
-                icon={<Icon.WarningCircle size={52} color={THEME.colors.red} />}
-              />
-            )}
-            <ListHistoric
-              data={extrato}
-              atualizar={refreshing}
-              onAtualizar={() => console.log('oii')}
-            />
-            {loading && <Loading />}
-          </>
+          {loading === true ? (
+            <View
+              style={{
+                marginTop: 120,
+                flex: 1,
+                justifyContent: 'center',
+                alignItems: 'center',
+              }}>
+              <Loading />
+            </View>
+          ) : (
+            <ListHistoric data={extrato} />
+          )}
         </Styled.Content>
       </Styled.SectionHistoric>
     </View>

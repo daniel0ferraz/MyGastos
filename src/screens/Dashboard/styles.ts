@@ -160,7 +160,7 @@ export const SectionHistoric = styled.View`
   ${({theme}) => css`
     flex: 1;
     padding: ${ms(10)}px;
-    margin-top: 50px;
+    margin-top: ${ms(43)}px;
     background: ${theme.colors.white};
   `}
 `;
@@ -171,7 +171,6 @@ export const HeaderHistoric = styled.View`
     margin-bottom: ${ms(5)}px;
     flex-direction: row;
     align-items: center;
-    justify-content: space-between;
     padding: ${ms(12)}px;
   `}
 `;
