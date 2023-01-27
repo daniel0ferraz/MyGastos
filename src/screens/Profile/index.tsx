@@ -36,6 +36,7 @@ import {gestureHandlerRootHOC} from 'react-native-gesture-handler';
 import {useTheme} from 'styled-components/native';
 import {User} from '../../@types/User';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
+import FastImage from 'react-native-fast-image';
 
 const {width, height} = Dimensions.get('window');
 
@@ -247,10 +248,13 @@ export function Profile() {
       </Goback>
       <ContentPhoto>
         <BoxProfile>
-          <Image
-            source={{uri: userInfo.photo}}
-            style={{height: 130, width: 130, borderRadius: 15}}
-            resizeMode="contain"
+          <FastImage
+            source={{
+              uri: userInfo.photo,
+              priority: FastImage.priority.high,
+            }}
+            style={{height: 130, width: 130, borderRadius: 12}}
+            resizeMode={FastImage.resizeMode.contain}
           />
         </BoxProfile>
         <IconPhoto

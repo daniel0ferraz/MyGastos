@@ -98,7 +98,7 @@ export default function Dashboard() {
   }, []);
 
   return (
-    <View style={{backgroundColor: THEME.colors.white, height: '100%'}}>
+    <SafeAreaView style={{backgroundColor: THEME.colors.white, height: '100%'}}>
       <Styled.Container>
         <Styled.Header>
           <Styled.BoxContent>
@@ -192,6 +192,6 @@ export default function Dashboard() {
           )}
         </Styled.Content>
       </Styled.SectionHistoric>
-    </View>
+    </SafeAreaView>
   );
 }

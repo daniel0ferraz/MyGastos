@@ -22,12 +22,12 @@ export const ContentPhoto = styled.View`
 
 export const BoxProfile = styled.View`
   ${({theme}) => css`
-    width: ${ms(120)}px;
-    height: ${ms(120)}px;
+    width: ${ms(130)}px;
+    height: ${ms(130)}px;
     border-radius: ${ms(12)}px;
     justify-content: center;
     align-items: center;
-    background: ${theme.colors.light};
+    background: ${theme.colors.gray600};
     margin-top: ${ms(10)}px;
   `}
 `;

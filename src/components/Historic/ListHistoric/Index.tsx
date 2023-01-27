@@ -1,13 +1,8 @@
-import React, {useState} from 'react';
+import React, {useCallback} from 'react';
 
 import {Dimensions, FlatList, Text, View} from 'react-native';
 import Historic from '..';
-
 import {ITransactionsCard} from '../../../@types/TransactionsCard';
-import PopUp from '../../PopUp/index';
-//Icon
-
-import * as Icon from 'phosphor-react-native';
 //Style
 import * as Styled from './styles';
 
@@ -27,8 +22,7 @@ export default function ListHistoric({data}: ListHitoricProps) {
         data={data}
         ItemSeparatorComponent={() => <Styled.Separator />}
         keyExtractor={(item: ITransactionsCard) => String(item?.id)}
-        initialNumToRender={5}
-        progressViewOffset={12}
+        removeClippedSubviews={true}
         ListEmptyComponent={() => (
           <View
             style={{
