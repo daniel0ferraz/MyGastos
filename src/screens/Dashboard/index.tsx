@@ -20,11 +20,13 @@ import Loading from '../../components/Loading';
 
 import auth, {firebase, FirebaseAuthTypes} from '@react-native-firebase/auth';
 import FastImage from 'react-native-fast-image';
+import {Filter} from '../../components/Filter';
 
 export default function Dashboard() {
-  const [extrato, setExtrato] = useState<ITransactionsCard[]>([]);
   const [loading, setLoading] = useState(false);
   const [credentials, setCredentials] = useState<User>({} as User);
+  const [extrato, setExtrato] = useState<ITransactionsCard[]>([]);
+  const [filter, setFilter] = useState<string | 'Todos'>('Todos');
 
   const THEME = useTheme();
 
@@ -56,25 +58,32 @@ export default function Dashboard() {
     }
   };
 
-  useEffect(() => {
-    setLoading(true);
-    const subscriber = firestore()
-      .collection('transationCardBackup')
-      .orderBy('created_at', 'desc')
-      .onSnapshot(querySnapshot => {
-        const data = querySnapshot.docs.map(doc => {
-          return {
-            id: doc.id,
-            ...doc.data(),
-          };
-        }) as ITransactionsCard[];
+  useFocusEffect(
+    useCallback(() => {
+      setLoading(true);
+      let subscriber = firestore()
+        .collection('transationCardBackup')
+        .orderBy('created_at', 'desc')
+        .limit(20)
+        .onSnapshot(querySnapshot => {
+          const data = querySnapshot.docs.map(doc => {
+            return {
+              id: doc.id,
+              ...doc.data(),
+            };
+          }) as ITransactionsCard[];
 
-        setExtrato(data);
-        setLoading(false);
-      });
+          if (filter === 'Todos') {
+            setExtrato(data);
+          } else {
+            setExtrato(data.filter(item => item.category === filter));
+          }
+          setLoading(false);
+        });
 
-    return () => subscriber();
-  }, []);
+      return () => subscriber();
+    }, [filter]),
+  );
 
   useEffect(() => {
     firestore()
@@ -170,10 +179,7 @@ export default function Dashboard() {
 
       <Styled.SectionHistoric>
         <Styled.HeaderHistoric>
-          <Styled.TitleHistoric>Movimentações</Styled.TitleHistoric>
-          {/*  <Styled.FilterIcon onPress={() => {}}>
-            <Icon.Funnel size={32} color={THEME.colors.gray} />
-          </Styled.FilterIcon> */}
+          <Filter setFiltro={setFilter} selectedCategory={filter} />
         </Styled.HeaderHistoric>
 
         <Styled.Content>

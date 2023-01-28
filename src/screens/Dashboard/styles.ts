@@ -44,7 +44,6 @@ export const InfoPage = styled.Text`
     color: ${theme.colors.light};
     font-family: ${theme.fonts.Lexend700};
     padding-top: 5px;
-    font
   `}
 `;
 
@@ -53,8 +52,8 @@ export const BoxIcon = styled.TouchableOpacity`
     align-items: center;
     justify-content: center;
 
-    width: ${ms(60)}px;
-    height: ${ms(60)}px;
+    width: ${ms(50)}px;
+    height: ${ms(50)}px;
     border-radius: ${ms(12)}px;
     background: ${theme.colors.white};
   `}
@@ -159,6 +158,7 @@ export const TextInfoCards = styled.Text`
 export const SectionHistoric = styled.View`
   ${({theme}) => css`
     flex: 1;
+
     padding: ${ms(10)}px;
     margin-top: ${ms(43)}px;
     background: ${theme.colors.white};
@@ -171,6 +171,7 @@ export const HeaderHistoric = styled.View`
     margin-bottom: ${ms(5)}px;
     flex-direction: row;
     align-items: center;
+    justify-content: space-between;
     padding: ${ms(12)}px;
   `}
 `;

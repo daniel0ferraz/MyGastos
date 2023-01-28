@@ -1,6 +1,7 @@
 import {Dimensions} from 'react-native';
 import {ms} from 'react-native-size-matters';
 import styled, {css} from 'styled-components/native';
+import {RFValue} from 'react-native-responsive-fontsize';
 
 export const Container = styled.View`
   ${({theme}) => css`
@@ -9,7 +10,7 @@ export const Container = styled.View`
     align-items: center;
     justify-content: space-evenly;
     background-color: ${theme.colors.white};
-    padding: 10px;
+    padding: ${RFValue(10)}px;
     border-radius: ${ms(12)}px;
     position: relative;
   `}
@@ -27,13 +28,13 @@ export const BoxIcons = styled.TouchableOpacity`
     background: ${theme.colors.white};
     align-items: center;
     justify-content: center;
-    border-radius: 12px;
+    border-radius: ${RFValue(12)}px;
   `}
 `;
 
 export const Label = styled.Text`
   ${({theme}) => css`
-    font-size: 15px;
+    font-size: ${RFValue(15)}px;
     padding-top: 5px;
     font-family: ${theme.fonts.Lexend700};
     color: ${theme.colors.gray};

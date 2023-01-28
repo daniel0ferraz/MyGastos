@@ -1,5 +1,6 @@
 import styled, {css} from 'styled-components/native';
 import {ms} from 'react-native-size-matters';
+import {RFValue} from 'react-native-responsive-fontsize';
 
 export const BoxError = styled.View`
   align-items: center;
@@ -9,7 +10,7 @@ export const BoxError = styled.View`
 export const ErrorData = styled.Text`
   ${({theme}) => css`
     color: ${theme.colors.gray2};
-    font-size: 18px;
+    font-size: ${RFValue(18)}px;
     font-family: ${theme.fonts.Lexend400};
   `}
 `;

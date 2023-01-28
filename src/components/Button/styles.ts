@@ -1,6 +1,7 @@
 import {TouchableOpacity} from 'react-native';
 import styled, {css} from 'styled-components/native';
 import {PropsButton} from '.';
+import {RFValue} from 'react-native-responsive-fontsize';
 
 type Props = Pick<PropsButton, 'size' | 'textColor'>;
 
@@ -43,7 +44,7 @@ export const Button = styled(TouchableOpacity)<Props>`
 
 export const TextButton = styled.Text<Props>`
   ${({theme, textColor}) => css`
-    font-size: 14px;
+    font-size: ${RFValue(14)}px;
     line-height: 24px;
     font-family: ${theme.fonts.Lexend500};
     ${!!textColor && modifierButton[textColor]};

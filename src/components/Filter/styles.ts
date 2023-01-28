@@ -1,7 +1,11 @@
 import {ms} from 'react-native-size-matters';
 import styled, {css} from 'styled-components/native';
 
-export const Container = styled.TouchableOpacity`
+export const Container = styled.View`
+  flex: 1;
+`;
+
+export const ContainerHeader = styled.TouchableOpacity`
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
@@ -42,7 +46,6 @@ export const ButtonText = styled.Text`
   ${({theme}) => css`
     color: ${theme.colors.white};
     font-size: ${ms(10)}px;
-    word-wrap: break-word;
 
     font-family: ${theme.fonts.Lexend500};
   `}

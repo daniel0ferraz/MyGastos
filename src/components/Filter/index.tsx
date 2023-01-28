@@ -16,14 +16,15 @@ import {
   Button,
   ButtonText,
   Container,
+  ContainerHeader,
   ContentItens,
   FilterIcon,
   TitleHistoric,
 } from './styles';
 
 type Props = {
-  selectedCategory?: string | null;
-  setFiltro: React.Dispatch<React.SetStateAction<string | null>>;
+  selectedCategory: string | 'Todos';
+  setFiltro: React.Dispatch<React.SetStateAction<string | 'Todos'>>;
 };
 
 type IOpcao = (typeof Categoria)[0];
@@ -33,56 +34,59 @@ export function Filter({selectedCategory, setFiltro}: Props) {
   const [isActive, setIsActive] = useState(false);
 
   function selecionarFiltro(category: IOpcao) {
-    if (selectedCategory === category.name) return setFiltro(null);
-
+    if (selectedCategory === category.name) return setFiltro('Todos');
     return setFiltro(category.name);
   }
 
   return (
     <>
       <Container>
-        <TitleHistoric>Movimentações</TitleHistoric>
+        <ContainerHeader>
+          <TitleHistoric>Movimentações</TitleHistoric>
 
-        <FilterIcon
-          onPress={() => {
-            setIsActive(!isActive);
-          }}>
-          <Icon.FunnelSimple size={32} />
-        </FilterIcon>
+          <FilterIcon
+            onPress={() => {
+              setIsActive(!isActive);
+            }}>
+            <Icon.FunnelSimple size={32} />
+          </FilterIcon>
+        </ContainerHeader>
+
+        <View>
+          <ScrollView
+            showsHorizontalScrollIndicator={false}
+            horizontal
+            snapToAlignment="center"
+            scrollEventThrottle={16}
+            decelerationRate="fast">
+            <ContentItens>
+              {Categoria.map(category => (
+                <Button
+                  key={category.id}
+                  onPress={() => {
+                    selecionarFiltro(category);
+                  }}
+                  style={{
+                    backgroundColor:
+                      selectedCategory === category.name
+                        ? THEME.colors.light
+                        : THEME.colors.gray600,
+                  }}>
+                  <ButtonText
+                    style={{
+                      color:
+                        selectedCategory === category.name
+                          ? THEME.colors.gray600
+                          : THEME.colors.light,
+                    }}>
+                    {category.name}
+                  </ButtonText>
+                </Button>
+              ))}
+            </ContentItens>
+          </ScrollView>
+        </View>
       </Container>
-
-      <ScrollView
-        showsHorizontalScrollIndicator={false}
-        horizontal
-        snapToAlignment="center"
-        scrollEventThrottle={16}
-        decelerationRate="fast">
-        <ContentItens>
-          {Categoria.map(category => (
-            <Button
-              key={category.id}
-              onPress={() => {
-                selecionarFiltro(category);
-              }}
-              style={{
-                backgroundColor:
-                  selectedCategory === category.name
-                    ? THEME.colors.light
-                    : THEME.colors.gray600,
-              }}>
-              <ButtonText
-                style={{
-                  color:
-                    selectedCategory === category.name
-                      ? THEME.colors.gray600
-                      : THEME.colors.light,
-                }}>
-                {category.name}
-              </ButtonText>
-            </Button>
-          ))}
-        </ContentItens>
-      </ScrollView>
     </>
   );
 }

@@ -21,7 +21,7 @@ export default function ListHistoric({data}: ListHitoricProps) {
         decelerationRate={'normal'}
         data={data}
         ItemSeparatorComponent={() => <Styled.Separator />}
-        keyExtractor={(item: ITransactionsCard) => String(item?.id)}
+        keyExtractor={item => item.id}
         removeClippedSubviews={true}
         ListEmptyComponent={() => (
           <View

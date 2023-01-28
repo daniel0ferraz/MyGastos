@@ -40,13 +40,6 @@ export default function IconsNav() {
         </Styled.BoxIcons>
         <Styled.Label>Resumo</Styled.Label>
       </Styled.Content>
-
-      <Styled.Content>
-        <Styled.BoxIcons onPress={() => navigation.navigate('Resume')}>
-          <Icon.AndroidLogo size={25} />
-        </Styled.BoxIcons>
-        <Styled.Label>...</Styled.Label>
-      </Styled.Content>
     </Styled.Container>
   );
 }
