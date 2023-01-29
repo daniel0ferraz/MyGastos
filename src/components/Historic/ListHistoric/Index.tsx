@@ -1,9 +1,10 @@
-import React, {useCallback} from 'react';
+import React from 'react';
 
 import {Dimensions, FlatList, Text, View} from 'react-native';
 import Historic from '..';
 import {ITransactionsCard} from '../../../@types/TransactionsCard';
 //Style
+import * as Icon from 'phosphor-react-native';
 import * as Styled from './styles';
 
 type ListHitoricProps = {
@@ -23,16 +24,12 @@ export default function ListHistoric({data}: ListHitoricProps) {
         ItemSeparatorComponent={() => <Styled.Separator />}
         keyExtractor={item => item.id}
         removeClippedSubviews={true}
+        snapToAlignment={'start'}
         ListEmptyComponent={() => (
-          <View
-            style={{
-              flex: 1,
-              justifyContent: 'center',
-              alignItems: 'center',
-              marginTop: 40,
-            }}>
+          <Styled.BoxError>
+            <Icon.Receipt size={35} />
             <Styled.ErrorData>Nenhum extrato encontrado.</Styled.ErrorData>
-          </View>
+          </Styled.BoxError>
         )}
         renderItem={({item}) => rederHistoric(item)}
       />

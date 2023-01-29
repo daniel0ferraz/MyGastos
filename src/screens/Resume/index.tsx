@@ -1,6 +1,6 @@
 import React, {useCallback, useEffect, useRef, useState} from 'react';
 
-import {Text, View} from 'react-native';
+import {Text, TouchableOpacity, View} from 'react-native';
 
 import firestore, {firebase} from '@react-native-firebase/firestore';
 import {colorCard, colorCategory} from '../../utils/Icons';
@@ -9,7 +9,7 @@ import {ITransactionsCard} from '../../@types/TransactionsCard';
 
 import {addMonths, subMonths, format, endOfMonth, startOfMonth} from 'date-fns';
 import {ptBR} from 'date-fns/locale';
-import {useFocusEffect} from '@react-navigation/native';
+import {useFocusEffect, useNavigation} from '@react-navigation/native';
 import {
   Month,
   MonthSelect,
@@ -18,18 +18,31 @@ import {
   SectionHistoric,
   HeaderHistoric,
   TitleHistoric,
+  Container,
+  Header,
+  BoxTitle,
+  BoxIcon,
+  TitleHeader,
 } from './style';
 import * as Icon from 'phosphor-react-native';
 import ListHistoric from '../../components/Historic/ListHistoric/Index';
 import Loading from '../../components/Loading';
 import {Filter} from '../../components/Filter';
+import {useTheme} from 'styled-components/native';
+import {API} from '../../config';
+import {formatToBRL, formatToNumber} from 'brazilian-values';
+import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 
 export default function Resume() {
+  const navigation = useNavigation<NativeStackNavigationProp<any>>();
+
   const [extrato, setExtrato] = useState<ITransactionsCard[]>([]);
 
   const [isLoading, setIsLoading] = useState(false);
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [filter, setFilter] = useState<string | 'Todos'>('Todos');
+
+  const THEME = useTheme();
 
   function handleChangeDate(action: 'next' | 'prev') {
     if (action === 'next') {
@@ -44,10 +57,7 @@ export default function Resume() {
     "dd/MM/yyyy'",
   ).toString();
 
-  const ultimoDiaMes = format(
-    endOfMonth(selectedDate),
-    "dd/MM/yyyy'",
-  ).toString();
+  let ultimoDiaMes = format(endOfMonth(selectedDate), "dd/MM/yyyy'").toString();
 
   console.log(primeiroDay, ultimoDiaMes);
 
@@ -55,7 +65,7 @@ export default function Resume() {
     useCallback(() => {
       setIsLoading(true);
       let subscriber = firestore()
-        .collection('transationCardBackup')
+        .collection(`${API}`)
         .orderBy('created_at', 'desc')
 
         .onSnapshot(querySnapshot => {
@@ -66,13 +76,7 @@ export default function Resume() {
             };
           }) as ITransactionsCard[];
 
-          if (filter === 'Todos') {
-            setExtrato(data);
-          } else {
-            setExtrato(data.filter(item => item.category === filter));
-          }
-
-          /*   if (selectedDate) {
+          if (primeiroDay) {
             setExtrato(
               data.filter(result => {
                 return (
@@ -80,13 +84,13 @@ export default function Resume() {
                 );
               }),
             );
-          } */
+          }
 
           setIsLoading(false);
         });
 
       return () => subscriber();
-    }, [filter]),
+    }, [primeiroDay]),
   );
 
   // Código inspirado em https://www.tutorialspoint.com/aggregate-records-in-javascript
@@ -130,35 +134,34 @@ export default function Resume() {
   console.log(dataForPieChart);
 
   return (
-    <View
-      style={{
-        flex: 1,
-        alignItems: 'center',
-        justifyContent: 'center',
-      }}>
-      <View>
-        <Text>Percentual de gastos</Text>
-      </View>
+    <Container>
+      <Header>
+        <BoxTitle>
+          <BoxIcon>
+            <Icon.ChartLineUp size={30} />
+          </BoxIcon>
+          <TitleHeader>Resumo</TitleHeader>
+        </BoxTitle>
 
-      <MonthSelect>
-        <MonthSelectButton onPress={() => handleChangeDate('prev')}>
-          <Icon.ArrowLeft />
-        </MonthSelectButton>
-
-        <Month>{format(selectedDate, 'MMMM, yyyy', {locale: ptBR})}</Month>
-
-        <MonthSelectButton onPress={() => handleChangeDate('next')}>
-          <Icon.ArrowRight />
-        </MonthSelectButton>
-      </MonthSelect>
-
+        <TouchableOpacity onPress={() => navigation.goBack()}>
+          <Icon.ArrowLeft size={30} />
+        </TouchableOpacity>
+      </Header>
       <SectionHistoric>
-        <HeaderHistoric>
-          <Filter setFiltro={setFilter} selectedCategory={filter} />
-        </HeaderHistoric>
+        <MonthSelect>
+          <MonthSelectButton onPress={() => handleChangeDate('prev')}>
+            <Icon.CaretLeft size={30} color={THEME.colors.gray600} />
+          </MonthSelectButton>
+
+          <Month>{format(selectedDate, 'MMMM, yyyy', {locale: ptBR})}</Month>
+
+          <MonthSelectButton onPress={() => handleChangeDate('next')}>
+            <Icon.CaretRight size={30} color={THEME.colors.gray600} />
+          </MonthSelectButton>
+        </MonthSelect>
 
         <Content>
-          {/*  {isLoading === true ? (
+          {isLoading === true ? (
             <View
               style={{
                 marginTop: 120,
@@ -168,26 +171,26 @@ export default function Resume() {
               }}>
               <Loading />
             </View>
-          ) : ( */}
-
-          <VictoryPie
-            data={dataForPieChart}
-            x="category"
-            y="value"
-            animate={{
-              easing: 'elasticOut',
-            }}
-            colorScale={dataForPieChart.map((item: any) =>
-              colorCategory({category: item.category}),
-            )}
-            padAngle={({datum}) => datum.y}
-            innerRadius={100}
-            style={{
-              labels: {
-                fontSize: 5,
-              },
-            }}
-          />
+          ) : (
+            <VictoryPie
+              data={dataForPieChart}
+              x="category"
+              y="value"
+              animate={{
+                easing: 'elastic',
+              }}
+              colorScale={dataForPieChart.map((item: any) =>
+                colorCategory({category: item.category}),
+              )}
+              padAngle={({datum}) => datum.y}
+              innerRadius={100}
+              style={{
+                labels: {
+                  fontSize: 5,
+                },
+              }}
+            />
+          )}
 
           {dataForPieChart.length === 0 ? (
             <>
@@ -196,6 +199,6 @@ export default function Resume() {
           ) : null}
         </Content>
       </SectionHistoric>
-    </View>
+    </Container>
   );
 }

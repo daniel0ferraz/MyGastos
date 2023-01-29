@@ -20,13 +20,11 @@ export default function Header({userInfo}: Props) {
   const navigation = useNavigation<NativeStackNavigationProp<any>>();
   const THEME = useTheme();
 
-  console.log('userInfo');
-
   const handleSingOut = async () => {
     try {
       await firebase.auth().signOut();
     } catch (error) {
-      console.log(error);
+      console.error(error);
     }
   };
   return (
@@ -41,7 +39,9 @@ export default function Header({userInfo}: Props) {
           opacity: 1,
         }}
         transition={{
-          type: 'spring',
+          type: 'timing',
+          duration: 400,
+          delay: 100,
         }}>
         <Styled.BoxIcon
           onPress={() =>
@@ -85,7 +85,9 @@ export default function Header({userInfo}: Props) {
           opacity: 1,
         }}
         transition={{
-          type: 'spring',
+          type: 'timing',
+          duration: 400,
+          delay: 100,
         }}>
         <Styled.BtnLoggout onPress={() => handleSingOut()}>
           <Icon.SignOut size={25} color={THEME.colors.white} />

@@ -35,6 +35,7 @@ import InputCustom from '../../components/InputCustom';
 
 import {toNumber} from '../../utils/mask';
 import {CardCategory, CategoryExpense, TipoDeGastos} from '../../services/mock';
+import {API} from '../../config';
 
 export default function ExpenseRegister() {
   const routes = useRoute<any>();
@@ -96,9 +97,7 @@ export default function ExpenseRegister() {
         return;
       }
 
-      const newExpense = firebase
-        .firestore()
-        .collection('transationCardBackup');
+      const newExpense = firebase.firestore().collection(`${API}`);
 
       await newExpense.add({
         name: expense.name,
@@ -137,7 +136,7 @@ export default function ExpenseRegister() {
     try {
       const updateExpense = firebase
         .firestore()
-        .doc(`transationCardBackup/${expenseExtract.id}`);
+        .doc(`${API}/${expenseExtract.id}`);
 
       await updateExpense.update({
         name: expense.name,
@@ -155,6 +154,8 @@ export default function ExpenseRegister() {
         text1: 'Extrato atualizado com sucesso!',
         position: 'bottom',
       });
+
+      navigation.goBack();
     } catch (error) {
       console.log('error update:', error);
       Toast.show({
@@ -190,7 +191,7 @@ export default function ExpenseRegister() {
     try {
       const deletarExtrato = firebase
         .firestore()
-        .doc(`transationCardBackup/${expenseExtract.id}`);
+        .doc(`${API}/${expenseExtract.id}`);
       await deletarExtrato.delete();
 
       clearExpense();

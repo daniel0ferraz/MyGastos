@@ -10,7 +10,7 @@ export const Container = styled.View`
     align-items: center;
     justify-content: space-evenly;
     background-color: ${theme.colors.white};
-    padding: ${RFValue(10)}px;
+    padding: ${ms(5)}px;
     border-radius: ${ms(12)}px;
     position: relative;
   `}
@@ -34,8 +34,8 @@ export const BoxIcons = styled.TouchableOpacity`
 
 export const Label = styled.Text`
   ${({theme}) => css`
-    font-size: ${RFValue(15)}px;
-    padding-top: 5px;
+    font-size: ${ms(15)}px;
+    padding-top: 1px;
     font-family: ${theme.fonts.Lexend700};
     color: ${theme.colors.gray};
   `}

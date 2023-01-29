@@ -5,13 +5,15 @@ import {RFValue} from 'react-native-responsive-fontsize';
 export const BoxError = styled.View`
   align-items: center;
   justify-content: center;
+  margin-top: ${ms(60)}px;
 `;
 
 export const ErrorData = styled.Text`
   ${({theme}) => css`
     color: ${theme.colors.gray2};
-    font-size: ${RFValue(18)}px;
+    font-size: ${ms(16)}px;
     font-family: ${theme.fonts.Lexend400};
+    padding-top: ${ms(5)}px;
   `}
 `;
 

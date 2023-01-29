@@ -5,7 +5,7 @@ import styled, {css} from 'styled-components/native';
 export const Container = styled.View`
   ${({theme}) => css`
     width: 100%
-    height: ${Dimensions.get('window').height / 1.9}px;
+    height: ${Dimensions.get('window').height / 2.1}px;
     padding: ${ms(15)}px;
     background: ${theme.colors.gray600};
     border-bottom-left-radius: 15px;
@@ -55,8 +55,8 @@ export const TextTotal = styled.Text`
 `;
 
 export const SectionMenu = styled.View`
-  margin-top: ${ms(20)}px;
-  padding: ${ms(10)}px;
+  top: ${ms(1)}px;
+  padding: ${ms(25)}px;
 `;
 
 export const BoxExpense = styled.View`
@@ -104,9 +104,7 @@ export const SectionHistoric = styled.View`
   ${({theme}) => css`
     flex: 1;
 
-    padding: ${ms(10)}px;
-    margin-top: ${ms(43)}px;
-    background: ${theme.colors.white};
+    margin-top: ${ms(40)}px;
   `}
 `;
 
@@ -117,7 +115,7 @@ export const HeaderHistoric = styled.View`
     flex-direction: row;
     align-items: center;
     justify-content: space-between;
-    padding: ${ms(12)}px;
+    padding: ${ms(10)}px;
   `}
 `;
 

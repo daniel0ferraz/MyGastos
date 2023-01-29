@@ -1,5 +1,5 @@
 //PROD
-//export const COLLECTION = 'transactionCardBackup';
+//export const API = 'transactionCardBackup';
 
 //HML
-//export const COLLECTION = 'transactionCard_HML';
+export const API = 'extratoGastos';

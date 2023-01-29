@@ -22,6 +22,7 @@ import {User} from '../../@types/User';
 import * as Styled from './styles';
 import {useTheme} from 'styled-components/native';
 import {formatToBRL} from 'brazilian-values';
+import {API} from '../../config';
 
 export default function Dashboard() {
   const [loading, setLoading] = useState(false);
@@ -53,7 +54,7 @@ export default function Dashboard() {
     useCallback(() => {
       setLoading(true);
       let subscriber = firestore()
-        .collection('transationCardBackup')
+        .collection(`${API}`)
         .orderBy('created_at', 'desc')
         .limit(25)
 

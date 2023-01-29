@@ -27,7 +27,7 @@ export const BoxIcon = styled.View`
     width: ${RFValue(50)}px;
     height: ${RFValue(50)}px;
     background: ${theme.colors.light};
-    border-radius: ${RFValue(12)}px;
+    border-radius: ${ms(12)}px;
     margin-right: 8px;
   `}
 `;

@@ -22,9 +22,9 @@ export default function IconsNav() {
           height: 7,
         },
         shadowOpacity: 0.58,
-        shadowRadius: 16.0,
+        shadowRadius: 12.0,
 
-        elevation: 15,
+        elevation: 12,
       }}>
       <Styled.Content>
         <Styled.BoxIcons
