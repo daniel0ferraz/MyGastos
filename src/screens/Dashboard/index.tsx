@@ -5,22 +5,23 @@ import * as Icon from 'phosphor-react-native';
 //Components
 import ListHistoric from '../../components/Historic/ListHistoric/Index';
 import IconsNav from '../../components/IconsNav';
+import Loading from '../../components/Loading';
+import {Filter} from '../../components/Filter';
+import Header from '../../components/Header';
+
+//Navigation
+import {useFocusEffect} from '@react-navigation/native';
+
+// services and Types
+import firestore from '@react-native-firebase/firestore';
+import {firebase} from '@react-native-firebase/auth';
 import {ITransactionsCard} from '../../@types/TransactionsCard';
 import {User} from '../../@types/User';
-// services
-import firestore from '@react-native-firebase/firestore';
-//Navigation
-import {useFocusEffect, useNavigation} from '@react-navigation/native';
-import {NativeStackNavigationProp} from '@react-navigation/native-stack';
+
 //Styles
 import * as Styled from './styles';
 import {useTheme} from 'styled-components/native';
 import {formatToBRL} from 'brazilian-values';
-import Loading from '../../components/Loading';
-
-import auth, {firebase, FirebaseAuthTypes} from '@react-native-firebase/auth';
-import FastImage from 'react-native-fast-image';
-import {Filter} from '../../components/Filter';
 
 export default function Dashboard() {
   const [loading, setLoading] = useState(false);
@@ -29,8 +30,6 @@ export default function Dashboard() {
   const [filter, setFilter] = useState<string | 'Todos'>('Todos');
 
   const THEME = useTheme();
-
-  const navigation = useNavigation<NativeStackNavigationProp<any>>();
 
   const filterValorGastos = extrato?.filter(
     (data: ITransactionsCard) => data.type === 'Gastos',
@@ -50,21 +49,14 @@ export default function Dashboard() {
 
   let valorTotal = valorEntradas;
 
-  const handleSingOut = async () => {
-    try {
-      await firebase.auth().signOut();
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
   useFocusEffect(
     useCallback(() => {
       setLoading(true);
       let subscriber = firestore()
         .collection('transationCardBackup')
         .orderBy('created_at', 'desc')
-        .limit(20)
+        .limit(25)
+
         .onSnapshot(querySnapshot => {
           const data = querySnapshot.docs.map(doc => {
             return {
@@ -109,35 +101,7 @@ export default function Dashboard() {
   return (
     <SafeAreaView style={{backgroundColor: THEME.colors.white, height: '100%'}}>
       <Styled.Container>
-        <Styled.Header>
-          <Styled.BoxContent>
-            <Styled.BoxIcon
-              onPress={() =>
-                navigation.navigate('Profile', {credentials: credentials})
-              }>
-              <FastImage
-                source={{
-                  uri: credentials.photo,
-                  priority: FastImage.priority.high,
-                }}
-                style={{height: 60, width: 60, borderRadius: 12}}
-                resizeMode={FastImage.resizeMode.contain}
-              />
-            </Styled.BoxIcon>
-            <Styled.BoxInfo>
-              <Styled.InfoText>Olá,</Styled.InfoText>
-              <Styled.InfoPage>
-                {credentials?.name
-                  ? `${credentials.name}`
-                  : 'Atualize seus dados'}
-              </Styled.InfoPage>
-            </Styled.BoxInfo>
-          </Styled.BoxContent>
-
-          <Styled.BtnLoggout onPress={() => handleSingOut()}>
-            <Icon.SignOut size={25} color={THEME.colors.white} />
-          </Styled.BtnLoggout>
-        </Styled.Header>
+        <Header userInfo={credentials} />
 
         <Styled.SectionCards>
           <Styled.SectionCardTotal>

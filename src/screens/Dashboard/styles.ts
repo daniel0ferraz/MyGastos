@@ -13,61 +13,6 @@ export const Container = styled.View`
   `}
 `;
 
-export const Header = styled.View`
-  ${({theme}) => css`
-    flex-direction: row;
-    align-items: center;
-    justify-content: space-between;
-  `}
-`;
-
-export const BoxContent = styled.View`
-  flex-direction: row;
-  align-items: center;
-`;
-
-export const BoxInfo = styled.View`
-  padding-left: 12px;
-`;
-
-export const InfoText = styled.Text`
-  ${({theme}) => css`
-    font-size: ${theme.sizes[16]}px;
-    color: ${theme.colors.white};
-    font-family: ${theme.fonts.Lexend400};
-  `}
-`;
-
-export const InfoPage = styled.Text`
-  ${({theme}) => css`
-    font-size: ${ms(16)}px;
-    color: ${theme.colors.light};
-    font-family: ${theme.fonts.Lexend700};
-    padding-top: 5px;
-  `}
-`;
-
-export const BoxIcon = styled.TouchableOpacity`
-  ${({theme}) => css`
-    align-items: center;
-    justify-content: center;
-
-    width: ${ms(50)}px;
-    height: ${ms(50)}px;
-    border-radius: ${ms(12)}px;
-    background: ${theme.colors.white};
-  `}
-`;
-
-export const BtnLoggout = styled.TouchableOpacity`
-  ${({theme}) => css`
-    align-items: center;
-    justify-content: center;
-    width: ${ms(60)}px;
-    height: ${ms(60)}px;
-  `}
-`;
-
 export const SectionCards = styled.View`
   ${({theme}) => css`
     flex-direction: column;

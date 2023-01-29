@@ -48,7 +48,7 @@ export function Filter({selectedCategory, setFiltro}: Props) {
             onPress={() => {
               setIsActive(!isActive);
             }}>
-            <Icon.FunnelSimple size={32} />
+            {/*   <Icon.FunnelSimple size={32} /> */}
           </FilterIcon>
         </ContainerHeader>
 
