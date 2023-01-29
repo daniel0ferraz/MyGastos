@@ -3,7 +3,7 @@ import React, {useCallback, useEffect, useRef, useState} from 'react';
 import {Text, View} from 'react-native';
 
 import firestore, {firebase} from '@react-native-firebase/firestore';
-import {colorCard} from '../../utils/Icons';
+import {colorCard, colorCategory} from '../../utils/Icons';
 import {VictoryPie} from 'victory-native';
 import {ITransactionsCard} from '../../@types/TransactionsCard';
 
@@ -43,7 +43,12 @@ export default function Resume() {
     startOfMonth(selectedDate),
     "dd/MM/yyyy'",
   ).toString();
-  let ultimoDiaMes = format(endOfMonth(selectedDate), "dd/MM/yyyy'").toString();
+
+  const ultimoDiaMes = format(
+    endOfMonth(selectedDate),
+    "dd/MM/yyyy'",
+  ).toString();
+
   console.log(primeiroDay, ultimoDiaMes);
 
   useFocusEffect(
@@ -52,7 +57,6 @@ export default function Resume() {
       let subscriber = firestore()
         .collection('transationCardBackup')
         .orderBy('created_at', 'desc')
-        .limit(20)
 
         .onSnapshot(querySnapshot => {
           const data = querySnapshot.docs.map(doc => {
@@ -68,6 +72,16 @@ export default function Resume() {
             setExtrato(data.filter(item => item.category === filter));
           }
 
+          /*   if (selectedDate) {
+            setExtrato(
+              data.filter(result => {
+                return (
+                  result.date >= primeiroDay && result.date <= ultimoDiaMes
+                );
+              }),
+            );
+          } */
+
           setIsLoading(false);
         });
 
@@ -75,7 +89,46 @@ export default function Resume() {
     }, [filter]),
   );
 
-  console.log('filter', filter);
+  // Código inspirado em https://www.tutorialspoint.com/aggregate-records-in-javascript
+  /**
+   * Agrega e soma um array de objetos simples (não tem suporte a objetos aninhados)
+   * @param {Object[]} array um array com os objetos a serem agregados
+   * @param {string} idProp qual campo torna cada objeto do array uma "categoria"
+   * @param {string} valueProp qual campo traz o valor numerico a ser somado
+   */
+
+  const aggregateOnSimpleObjectArray = (
+    array: ITransactionsCard,
+    idProp: string,
+    valueProp: string,
+  ) => {
+    return array.reduce(
+      (acc: {[x: string]: any}[], val: {[x: string]: any}) => {
+        const index = acc.findIndex((obj: {[x: string]: any}) => {
+          return obj[idProp] === val[idProp];
+        });
+        if (index !== -1) {
+          acc[index][valueProp] += val[valueProp];
+        } else {
+          acc.push({
+            [idProp]: val[idProp],
+            [valueProp]: val[valueProp],
+          });
+        }
+        return acc;
+      },
+      [],
+    );
+  };
+
+  const dataForPieChart = aggregateOnSimpleObjectArray(
+    extrato,
+    'category',
+    'value',
+  );
+
+  console.log(dataForPieChart);
+
   return (
     <View
       style={{
@@ -105,7 +158,7 @@ export default function Resume() {
         </HeaderHistoric>
 
         <Content>
-          {isLoading === true ? (
+          {/*  {isLoading === true ? (
             <View
               style={{
                 marginTop: 120,
@@ -115,9 +168,32 @@ export default function Resume() {
               }}>
               <Loading />
             </View>
-          ) : (
-            <ListHistoric data={extrato} />
-          )}
+          ) : ( */}
+
+          <VictoryPie
+            data={dataForPieChart}
+            x="category"
+            y="value"
+            animate={{
+              easing: 'elasticOut',
+            }}
+            colorScale={dataForPieChart.map((item: any) =>
+              colorCategory({category: item.category}),
+            )}
+            padAngle={({datum}) => datum.y}
+            innerRadius={100}
+            style={{
+              labels: {
+                fontSize: 5,
+              },
+            }}
+          />
+
+          {dataForPieChart.length === 0 ? (
+            <>
+              <Text>Nenhum registro encontrado</Text>
+            </>
+          ) : null}
         </Content>
       </SectionHistoric>
     </View>

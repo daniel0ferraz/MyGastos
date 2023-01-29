@@ -50,6 +50,59 @@ export const iconBuy = (data: {category: string}) => {
   }
 };
 
+export const colorCategory = (data: {category: string}) => {
+  const THEME = useTheme();
+
+  switch (data?.category) {
+    case 'Alimentação': {
+      return THEME.colors.red;
+    }
+
+    case 'Bebidas': {
+      return THEME.colors.yellow;
+    }
+
+    case 'Boleto/Faturas mensais': {
+      return THEME.colors.blue;
+    }
+
+    case 'Estética': {
+      return THEME.colors.orange;
+    }
+
+    case 'Pix': {
+      return THEME.colors.cards.nubank;
+    }
+
+    case 'Renda extra': {
+      return THEME.colors.purple;
+    }
+
+    case 'Roupas': {
+      return THEME.colors.cards.picpay;
+    }
+
+    case 'Saúde': {
+      return THEME.colors.cards.ame;
+    }
+    case 'Supermercado': {
+      return THEME.colors.cards.next;
+    }
+
+    case 'Salário': {
+      return THEME.colors.green;
+    }
+
+    case 'Viagens': {
+      return THEME.colors.cards.ame;
+    }
+
+    default: {
+      return THEME.colors.gray2;
+    }
+  }
+};
+
 export const colorCard = (data: {cardId: number}) => {
   const THEME = useTheme();
   switch (data?.cardId) {
