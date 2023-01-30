@@ -23,8 +23,8 @@ import {
 } from './styles';
 
 type Props = {
-  selectedCategory: string | 'Todos';
-  setFiltro: React.Dispatch<React.SetStateAction<string | 'Todos'>>;
+  selectedCategory: string | 'Tudo';
+  setFiltro: React.Dispatch<React.SetStateAction<string | 'Tudo'>>;
 };
 
 type IOpcao = (typeof Categoria)[0];
@@ -34,7 +34,7 @@ export function Filter({selectedCategory, setFiltro}: Props) {
   const [isActive, setIsActive] = useState(false);
 
   function selecionarFiltro(category: IOpcao) {
-    if (selectedCategory === category.name) return setFiltro('Todos');
+    if (selectedCategory === category.name) return setFiltro('Tudo');
     return setFiltro(category.name);
   }
 
@@ -56,15 +56,14 @@ export function Filter({selectedCategory, setFiltro}: Props) {
           <ScrollView
             showsHorizontalScrollIndicator={false}
             horizontal
-            snapToAlignment="center"
-            scrollEventThrottle={16}
-            decelerationRate="fast">
+            decelerationRate="normal">
             <ContentItens>
               {Categoria.map(category => (
                 <Button
                   key={category.id}
                   onPress={() => {
                     selecionarFiltro(category);
+                    console.log(category);
                   }}
                   style={{
                     backgroundColor:

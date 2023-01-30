@@ -78,7 +78,6 @@ export function Profile() {
       width: height,
       cropping: true,
     }).then(image => {
-      console.log(image);
       setUserInfo({
         ...userInfo,
         photo: image.path,
@@ -98,7 +97,6 @@ export function Profile() {
       .ref(`profile/${userInfo?.name}`)
       .getDownloadURL()
       .then(url => {
-        console.log('url', url);
         if (url) {
           setUserInfo({
             ...userInfo,
@@ -176,7 +174,6 @@ export function Profile() {
       .ref(`${dataUser.name}`)
       .getDownloadURL()
       .then(url => {
-        console.log('url--->', url);
         if (url) {
           setUserInfo({
             ...userInfo,
@@ -184,9 +181,7 @@ export function Profile() {
           });
         }
       })
-      .catch(error => {
-        console.log('error>>', error);
-      });
+      .catch(error => {});
 
     try {
       await task;
@@ -226,7 +221,7 @@ export function Profile() {
       }
     } catch (error: any) {
       const errorCode = error.code;
-      console.log(errorCode);
+
       Toast.show({
         text1: 'VerifyErroCode(errorCode)',
         position: 'bottom',

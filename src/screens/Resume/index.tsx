@@ -23,6 +23,10 @@ import {
   BoxTitle,
   BoxIcon,
   TitleHeader,
+  Legend,
+  ContentLegend,
+  ContainerLegend,
+  BoxLegend,
 } from './style';
 import * as Icon from 'phosphor-react-native';
 import ListHistoric from '../../components/Historic/ListHistoric/Index';
@@ -32,6 +36,7 @@ import {useTheme} from 'styled-components/native';
 import {API} from '../../config';
 import {formatToBRL, formatToNumber} from 'brazilian-values';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
+import Filter2 from '../../components/Filter2';
 
 export default function Resume() {
   const navigation = useNavigation<NativeStackNavigationProp<any>>();
@@ -40,7 +45,6 @@ export default function Resume() {
 
   const [isLoading, setIsLoading] = useState(false);
   const [selectedDate, setSelectedDate] = useState(new Date());
-  const [filter, setFilter] = useState<string | 'Todos'>('Todos');
 
   const THEME = useTheme();
 
@@ -58,8 +62,6 @@ export default function Resume() {
   ).toString();
 
   let ultimoDiaMes = format(endOfMonth(selectedDate), "dd/MM/yyyy'").toString();
-
-  console.log(primeiroDay, ultimoDiaMes);
 
   useFocusEffect(
     useCallback(() => {
@@ -131,8 +133,6 @@ export default function Resume() {
     'value',
   );
 
-  console.log(dataForPieChart);
-
   return (
     <Container>
       <Header>
@@ -176,6 +176,7 @@ export default function Resume() {
               data={dataForPieChart}
               x="category"
               y="value"
+              height={200}
               animate={{
                 easing: 'elastic',
               }}
@@ -184,13 +185,32 @@ export default function Resume() {
               )}
               padAngle={({datum}) => datum.y}
               innerRadius={100}
+              cornerRadius={10}
+              padding={26}
               style={{
                 labels: {
-                  fontSize: 5,
+                  display: 'none',
                 },
               }}
             />
           )}
+
+          <ContentLegend>
+            {dataForPieChart.map((item: any) => (
+              <>
+                <ContainerLegend>
+                  <BoxLegend
+                    style={{
+                      backgroundColor: colorCategory({
+                        category: item.category,
+                      }),
+                    }}
+                  />
+                  <Legend>{item.category}</Legend>
+                </ContainerLegend>
+              </>
+            ))}
+          </ContentLegend>
 
           {dataForPieChart.length === 0 ? (
             <>

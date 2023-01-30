@@ -41,6 +41,7 @@ export const iconBuy = (data: {category: string}) => {
       return <Icon.CurrencyDollar size={28} color={THEME.colors.gray} />;
     }
 
+    case 'Boleto/Faturas':
     case 'Boleto/Faturas mensais': {
       return <Icon.Receipt size={28} color={THEME.colors.gray} />;
     }

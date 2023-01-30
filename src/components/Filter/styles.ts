@@ -13,6 +13,7 @@ export const TitleHistoric = styled.Text`
     font-size: ${theme.sizes[20]}px;
     color: ${theme.colors.dark};
     font-family: ${theme.fonts.Lexend500};
+    padding-bottom: 5px;
   `}
 `;
 
@@ -26,24 +27,22 @@ export const ContentItens = styled.View`
   justify-content: center;
   flex-direction: row;
   margin-top: 15px;
+  padding-bottom: 5px;
 `;
 
 export const Button = styled.TouchableOpacity`
   ${({theme}) => css`
-    width: ${ms(100)}px;
-    height: 30px;
-
-    border-radius: ${ms(12)}px;
-
-    justify-content: center;
-    align-items: center;
-    margin-right: 10px;
+  margin-right: 10px;
+  padding: 6px
+  border-radius: ${ms(9)}px;
+  border: 1px
   `}
 `;
+
 export const ButtonText = styled.Text`
   ${({theme}) => css`
     color: ${theme.colors.white};
-    font-size: ${ms(10)}px;
+    font-size: ${ms(12)}px;
     font-family: ${theme.fonts.Lexend500};
   `}
 `;

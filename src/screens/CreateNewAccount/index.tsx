@@ -50,7 +50,6 @@ export function CreateNewAccount() {
       width: height,
       cropping: true,
     }).then(image => {
-      console.log('Image: ', image);
       setNewUser({
         ...newUser,
         avatar: image.path,
@@ -65,7 +64,6 @@ export function CreateNewAccount() {
       width: height,
       cropping: true,
     }).then(image => {
-      console.log(image);
       setNewUser({
         ...newUser,
         photo: image.path,
@@ -131,7 +129,6 @@ export function CreateNewAccount() {
       .ref(`${newUser?.name}`)
       .getDownloadURL()
       .then(url => {
-        console.log('url--->', url);
         if (url) {
           setNewUser({
             ...newUser,
@@ -166,7 +163,7 @@ export function CreateNewAccount() {
       }
     } catch (error: any) {
       const errorCode = error.code;
-      console.log(errorCode);
+
       Toast.show({
         text1: VerifyErroCode(errorCode),
         position: 'bottom',
@@ -194,7 +191,7 @@ export function CreateNewAccount() {
         <ContentPhoto>
           <BoxProfile>
             <Image
-              source={{uri: newUser.avatar ? newUser.avatar : null}}
+              source={{uri: newUser.avatar ? newUser.avatar : ''}}
               style={{height: 130, width: 130, borderRadius: 15}}
               resizeMode="contain"
             />
@@ -208,47 +205,41 @@ export function CreateNewAccount() {
           </IconPhoto>
         </ContentPhoto>
 
-        <InputSpace>
-          <InputCustom
-            value={newUser.name}
-            keyboardType="default"
-            Icon={<Icon.User />}
-            placeholder="Nome"
-            onChangeText={text => {
-              setNewUser({...newUser, name: text});
-            }}
-            autoCorrect={false}
-          />
-        </InputSpace>
+        <InputCustom
+          value={newUser.name}
+          keyboardType="default"
+          Icon={<Icon.User />}
+          placeholder="Nome"
+          onChangeText={text => {
+            setNewUser({...newUser, name: text});
+          }}
+          autoCorrect={false}
+        />
 
-        <InputSpace>
-          <InputCustom
-            placeholder="Email"
-            value={newUser.email}
-            onChangeText={text => {
-              setNewUser({...newUser, email: text});
-            }}
-            Icon={<Icon.EnvelopeSimple size={28} />}
-            keyboardType="email-address"
-            autoCorrect={false}
-          />
-        </InputSpace>
+        <InputCustom
+          placeholder="Email"
+          value={newUser.email}
+          onChangeText={text => {
+            setNewUser({...newUser, email: text});
+          }}
+          Icon={<Icon.EnvelopeSimple size={28} />}
+          keyboardType="email-address"
+          autoCorrect={false}
+        />
 
-        <InputSpace>
-          <InputCustom
-            placeholder="Senha"
-            value={newUser.password}
-            onChangeText={text => {
-              setNewUser({...newUser, password: text});
-            }}
-            Icon={<Icon.Key size={28} />}
-            autoCapitalize="none"
-            secureTextEntry
-            iconSec={true}
-            autoCorrect={false}
-            keyboardType="visible-password"
-          />
-        </InputSpace>
+        <InputCustom
+          placeholder="Senha"
+          value={newUser.password}
+          onChangeText={text => {
+            setNewUser({...newUser, password: text});
+          }}
+          Icon={<Icon.Key size={28} />}
+          autoCapitalize="none"
+          secureTextEntry
+          iconSec={true}
+          autoCorrect={false}
+          keyboardType="visible-password"
+        />
 
         <InputCustom
           placeholder="Confirmar Senha"

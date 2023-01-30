@@ -28,7 +28,7 @@ export default function Dashboard() {
   const [loading, setLoading] = useState(false);
   const [credentials, setCredentials] = useState<User>({} as User);
   const [extrato, setExtrato] = useState<ITransactionsCard[]>([]);
-  const [filter, setFilter] = useState<string | 'Todos'>('Todos');
+  const [filter, setFilter] = useState<string | 'Todo'>('Tudo');
 
   const THEME = useTheme();
 
@@ -56,7 +56,6 @@ export default function Dashboard() {
       let subscriber = firestore()
         .collection(`${API}`)
         .orderBy('created_at', 'desc')
-        .limit(25)
 
         .onSnapshot(querySnapshot => {
           const data = querySnapshot.docs.map(doc => {
@@ -66,7 +65,7 @@ export default function Dashboard() {
             };
           }) as ITransactionsCard[];
 
-          if (filter === 'Todos') {
+          if (filter === 'Tudo') {
             setExtrato(data);
           } else {
             setExtrato(data.filter(item => item.category === filter));
@@ -78,26 +77,28 @@ export default function Dashboard() {
     }, [filter]),
   );
 
-  useEffect(() => {
-    firestore()
-      .collection('users')
-      .where('id', '==', firebase.auth().currentUser?.uid)
-      .get()
-      .then(querySnapshot => {
-        const data: any = [];
-        querySnapshot.forEach(documentSnapshot => {
-          data.push({
-            ...documentSnapshot.data(),
-            id: documentSnapshot.id,
+  useFocusEffect(
+    useCallback(() => {
+      firestore()
+        .collection('users')
+        .where('id', '==', firebase.auth().currentUser?.uid)
+        .get()
+        .then(querySnapshot => {
+          const data: any = [];
+          querySnapshot.forEach(documentSnapshot => {
+            data.push({
+              ...documentSnapshot.data(),
+              id: documentSnapshot.id,
+            });
           });
-        });
-        const user = data.find(
-          (item: User) => item.id === firebase.auth().currentUser?.uid,
-        );
+          const user = data.find(
+            (item: User) => item.id === firebase.auth().currentUser?.uid,
+          );
 
-        setCredentials(user);
-      });
-  }, []);
+          setCredentials(user);
+        });
+    }, []),
+  );
 
   return (
     <SafeAreaView style={{backgroundColor: THEME.colors.white, height: '100%'}}>

@@ -4,6 +4,7 @@ import styled, {css} from 'styled-components/native';
 
 export const Container = styled.View`
   ${({theme}) => css`
+    flex: 1;
     width: 100%;
     background-color: ${theme.colors.white};
     padding: 12px;
@@ -102,5 +103,45 @@ export const FilterIcon = styled.TouchableOpacity``;
 export const Content = styled.View`
   ${({theme}) => css`
     background-color: ${theme.colors.white};
+  `}
+`;
+
+export const ContentLegend = styled.View`
+  ${({theme}) => css`
+    width: 100%;
+    height: ${ms(170)}px;
+    flex-wrap: wrap;
+
+    background-color: ${theme.colors.light};
+    margin-top: ${ms(30)}px;
+  `}
+`;
+
+export const ContainerLegend = styled.View`
+  ${({theme}) => css`
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: ${ms(10)}px;
+  `}
+`;
+
+export const BoxLegend = styled.View`
+  ${({theme}) => css`
+    flex-direction: row;
+    align-items: center;
+    width: ${ms(10)}px;
+    height: ${ms(10)}px;
+    border-radius: ${ms(12)}px;
+    margin-bottom: ${ms(10)}px;
+  `}
+`;
+
+export const Legend = styled.Text`
+  ${({theme}) => css`
+    font-size: ${ms(10)}px;
+    color: ${theme.colors.gray600};
+    padding-left: ${ms(12)}px;
+    font-family: ${theme.fonts.Lexend500};
   `}
 `;

@@ -1,7 +1,6 @@
 import {Dimensions} from 'react-native';
 import {ms} from 'react-native-size-matters';
 import styled, {css} from 'styled-components/native';
-import {RFValue} from 'react-native-responsive-fontsize';
 
 export const Container = styled.View`
   ${({theme}) => css`
@@ -28,7 +27,7 @@ export const BoxIcons = styled.TouchableOpacity`
     background: ${theme.colors.white};
     align-items: center;
     justify-content: center;
-    border-radius: ${RFValue(12)}px;
+    border-radius: ${ms(12)}px;
   `}
 `;
 

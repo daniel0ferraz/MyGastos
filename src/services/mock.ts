@@ -18,7 +18,7 @@ export const CategoryExpense = [
 export const Categoria = [
   {
     id: 12,
-    name: 'Todos',
+    name: 'Tudo',
   },
   {
     id: 1,

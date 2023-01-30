@@ -157,7 +157,6 @@ export default function ExpenseRegister() {
 
       navigation.goBack();
     } catch (error) {
-      console.log('error update:', error);
       Toast.show({
         type: 'error',
         text1: 'Ops! algo deu errado :(',
