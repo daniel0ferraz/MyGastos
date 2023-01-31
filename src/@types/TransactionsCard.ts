@@ -4,8 +4,7 @@ export type ITransactionsCard = {
   category: string;
   value: string;
   date: string;
-  date_formatted: string;
   type: string;
-  cardId: number;
+  cardId: string;
   created_at?: Date;
 };

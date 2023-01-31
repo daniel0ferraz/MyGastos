@@ -109,43 +109,61 @@ export const Content = styled.View`
 export const ContentLegend = styled.View`
   ${({theme}) => css`
     width: 100%;
-    height: ${ms(140)}px;
-    flex-wrap: wrap;
-    justify-content: space-between;
-    align-items: flex-start;
-    padding: ${ms(10)}px;
+    height: 160px;
+    justify-content: center;
 
-    background-color: ${theme.colors.light};
-    margin-top: ${ms(30)}px;
+    background-color: ${theme.colors.white};
+    margin-top: ${ms(25)}px;
+    padding: 18px;
+    border-radius: 12px;
   `}
 `;
 
-export const ContainerLegend = styled.View`
+export const BoxGroup = styled.View`
   ${({theme}) => css`
     flex-direction: row;
     align-items: center;
     justify-content: space-between;
+    margin-bottom: 12px;
+  `}
+`;
 
-    margin-bottom: ${ms(8)}px;
+export const BoxIconLegend = styled.View`
+  ${({theme}) => css`
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
   `}
 `;
 
 export const BoxLegend = styled.View`
   ${({theme}) => css`
-    flex-direction: column;
-    align-items: center;
-    width: ${ms(10)}px;
-    height: ${ms(10)}px;
-    border-radius: ${ms(12)}px;
-    margin-bottom: ${ms(10)}px;
+    width: ${ms(14)}px;
+    height: ${ms(14)}px;
+    border-radius: ${ms(3)}px;
+    flex-direction: row;
   `}
+`;
+
+export const BoxTextLegend = styled.View`
+  ${({theme}) => css``}
 `;
 
 export const Legend = styled.Text`
   ${({theme}) => css`
-    font-size: ${ms(11)}px;
+    font-size: ${ms(13)}px;
     color: ${theme.colors.gray600};
-    padding-left: ${ms(10)}px;
+
+    font-family: ${theme.fonts.Lexend500};
+    padding-left: 5px;
+  `}
+`;
+
+export const LegendValue = styled.Text`
+  ${({theme}) => css`
+    font-size: ${ms(12)}px;
+    color: ${theme.colors.gray2};
+
     font-family: ${theme.fonts.Lexend500};
   `}
 `;

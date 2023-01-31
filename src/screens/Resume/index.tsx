@@ -25,8 +25,11 @@ import {
   TitleHeader,
   Legend,
   ContentLegend,
-  ContainerLegend,
+  BoxIconLegend,
+  BoxTextLegend,
+  LegendValue,
   BoxLegend,
+  BoxGroup,
 } from './style';
 import * as Icon from 'phosphor-react-native';
 import ListHistoric from '../../components/Historic/ListHistoric/Index';
@@ -48,21 +51,21 @@ export default function Resume() {
 
   const THEME = useTheme();
 
-  function handleChangeDate(action: 'next' | 'prev') {
+  /* function handleChangeDate(action: 'next' | 'prev') {
     if (action === 'next') {
       setSelectedDate(addMonths(selectedDate, 1));
     } else {
       setSelectedDate(subMonths(selectedDate, 1));
     }
-  }
+  } */
 
-  let primeiroDay = format(
+  /* let primeiroDay = format(
     startOfMonth(selectedDate),
     "dd/MM/yyyy'",
   ).toString();
 
   let ultimoDiaMes = format(endOfMonth(selectedDate), "dd/MM/yyyy'").toString();
-
+ */
   useFocusEffect(
     useCallback(() => {
       setIsLoading(true);
@@ -78,21 +81,12 @@ export default function Resume() {
             };
           }) as ITransactionsCard[];
 
-          if (primeiroDay) {
-            setExtrato(
-              data.filter(result => {
-                return (
-                  result.date >= primeiroDay && result.date <= ultimoDiaMes
-                );
-              }),
-            );
-          }
-
+          setExtrato(data);
           setIsLoading(false);
         });
 
       return () => subscriber();
-    }, [primeiroDay]),
+    }, []),
   );
 
   // Código inspirado em https://www.tutorialspoint.com/aggregate-records-in-javascript
@@ -148,6 +142,7 @@ export default function Resume() {
         </TouchableOpacity>
       </Header>
       <SectionHistoric>
+        {/*    
         <MonthSelect>
           <MonthSelectButton onPress={() => handleChangeDate('prev')}>
             <Icon.CaretLeft size={30} color={THEME.colors.gray600} />
@@ -158,7 +153,7 @@ export default function Resume() {
           <MonthSelectButton onPress={() => handleChangeDate('next')}>
             <Icon.CaretRight size={30} color={THEME.colors.gray600} />
           </MonthSelectButton>
-        </MonthSelect>
+        </MonthSelect> */}
 
         <Content>
           {isLoading === true ? (
@@ -174,7 +169,7 @@ export default function Resume() {
           ) : (
             <VictoryPie
               data={dataForPieChart}
-              x="category"
+              x="cardId"
               y="value"
               height={200}
               animate={{
@@ -198,16 +193,22 @@ export default function Resume() {
           <ContentLegend>
             {dataForPieChart.map((item: any) => (
               <>
-                <ContainerLegend>
-                  <BoxLegend
-                    style={{
-                      backgroundColor: colorCategory({
-                        category: item.category,
-                      }),
-                    }}
-                  />
-                  <Legend>{item.category}</Legend>
-                </ContainerLegend>
+                <BoxGroup>
+                  <BoxIconLegend>
+                    <BoxLegend
+                      style={{
+                        backgroundColor: colorCategory({
+                          category: item.category,
+                        }),
+                      }}
+                    />
+                    <Legend>{item.category}</Legend>
+                  </BoxIconLegend>
+
+                  <BoxTextLegend>
+                    <LegendValue>{item.value}</LegendValue>
+                  </BoxTextLegend>
+                </BoxGroup>
               </>
             ))}
           </ContentLegend>
