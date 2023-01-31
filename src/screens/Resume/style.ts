@@ -109,8 +109,11 @@ export const Content = styled.View`
 export const ContentLegend = styled.View`
   ${({theme}) => css`
     width: 100%;
-    height: ${ms(170)}px;
+    height: ${ms(140)}px;
     flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding: ${ms(10)}px;
 
     background-color: ${theme.colors.light};
     margin-top: ${ms(30)}px;
@@ -122,13 +125,14 @@ export const ContainerLegend = styled.View`
     flex-direction: row;
     align-items: center;
     justify-content: space-between;
-    margin-bottom: ${ms(10)}px;
+
+    margin-bottom: ${ms(8)}px;
   `}
 `;
 
 export const BoxLegend = styled.View`
   ${({theme}) => css`
-    flex-direction: row;
+    flex-direction: column;
     align-items: center;
     width: ${ms(10)}px;
     height: ${ms(10)}px;
@@ -139,9 +143,9 @@ export const BoxLegend = styled.View`
 
 export const Legend = styled.Text`
   ${({theme}) => css`
-    font-size: ${ms(10)}px;
+    font-size: ${ms(11)}px;
     color: ${theme.colors.gray600};
-    padding-left: ${ms(12)}px;
+    padding-left: ${ms(10)}px;
     font-family: ${theme.fonts.Lexend500};
   `}
 `;
