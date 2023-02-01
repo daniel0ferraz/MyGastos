@@ -63,7 +63,6 @@ export function Filter({selectedCategory, setFiltro}: Props) {
                   key={category.id}
                   onPress={() => {
                     selecionarFiltro(category);
-                    console.log(category);
                   }}
                   style={{
                     backgroundColor:

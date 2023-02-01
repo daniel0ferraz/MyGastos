@@ -8,6 +8,7 @@ import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import * as Styled from './styles';
 import * as Icon from 'phosphor-react-native';
 import {iconBuy, colorExpense} from '../../utils/Icons';
+import {toNumber} from '../../utils/mask';
 
 type Props = {
   data: ITransactionsCard;

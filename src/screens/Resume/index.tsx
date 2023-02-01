@@ -206,7 +206,7 @@ export default function Resume() {
                   </BoxIconLegend>
 
                   <BoxTextLegend>
-                    <LegendValue>{item.value}</LegendValue>
+                    <LegendValue>{formatToBRL(item.value)}</LegendValue>
                   </BoxTextLegend>
                 </BoxGroup>
               </>

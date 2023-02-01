@@ -63,7 +63,7 @@ export const colorCategory = (data: {category: string}) => {
       return THEME.colors.yellow;
     }
 
-    case 'Boleto/Faturas mensais': {
+    case 'Boleto/Faturas': {
       return THEME.colors.blue;
     }
 
@@ -104,30 +104,30 @@ export const colorCategory = (data: {category: string}) => {
   }
 };
 
-export const colorCard = (data: {cardId: number}) => {
+export const colorCard = (data: {cardId: string}) => {
   const THEME = useTheme();
   switch (data?.cardId) {
-    case 1: {
+    case 'Ame': {
       return THEME.colors.cards.ame;
     }
 
-    case 2: {
+    case 'Iti': {
       return THEME.colors.cards.iti;
     }
 
-    case 3: {
+    case 'Neon': {
       return THEME.colors.cards.neon;
     }
 
-    case 4: {
+    case 'Neon': {
       return THEME.colors.cards.next;
     }
 
-    case 5: {
+    case 'Nubank': {
       return THEME.colors.cards.nubank;
     }
 
-    case 6: {
+    case 'PicPay': {
       return THEME.colors.cards.picpay;
     }
 

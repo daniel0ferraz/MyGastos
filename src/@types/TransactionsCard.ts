@@ -2,7 +2,7 @@ export type ITransactionsCard = {
   id: string;
   name: string;
   category: string;
-  value: string;
+  value: number;
   date: string;
   type: string;
   cardId: string;

@@ -1,39 +1,23 @@
-import React, {useEffect, useRef, useState} from 'react';
+import React, {useRef, useState} from 'react';
 import {useNavigation, useRoute} from '@react-navigation/native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
-import {
-  Alert,
-  Dimensions,
-  Platform,
-  ScrollView,
-  TouchableOpacity,
-  View,
-} from 'react-native';
-
-//Icons
-
+import {Alert, Platform, ScrollView, TouchableOpacity} from 'react-native';
 //Components
 import Input from '../../components/Input';
-
-import {parseToNumber, formatToBRL, formatToNumber} from 'brazilian-values';
-//Services
-import {ITransactionsCard} from '../../@types/TransactionsCard';
-
+import Toast from 'react-native-toast-message';
+import SelectDropdown from 'react-native-select-dropdown';
+import * as Icon from 'phosphor-react-native';
+import Button from '../../components/Button';
+import InputCustom from '../../components/InputCustom';
+import CurrencyInput from 'react-native-currency-input';
 //Styles
 import {useTheme} from 'styled-components/native';
 import * as Styled from './styles';
 import {styles} from './styles_select';
-
-import Toast from 'react-native-toast-message';
-import firestore, {firebase} from '@react-native-firebase/firestore';
-import SelectDropdown, {
-  SelectDropdownProps,
-} from 'react-native-select-dropdown';
-import * as Icon from 'phosphor-react-native';
-import Button from '../../components/Button';
-import InputCustom from '../../components/InputCustom';
-
-import {toNumber} from '../../utils/mask';
+import {style} from './style_input';
+//Services
+import {ITransactionsCard} from '../../@types/TransactionsCard';
+import {firebase} from '@react-native-firebase/firestore';
 import {CardCategory, CategoryExpense, TipoDeGastos} from '../../services/mock';
 import {API} from '../../config';
 
@@ -58,7 +42,7 @@ export default function ExpenseRegister() {
     value: '' || expenseExtract?.value,
     date: '' || expenseExtract?.date,
     type: '' || expenseExtract?.type,
-    cardId: 0 || expenseExtract?.cardId,
+    cardId: '' || expenseExtract?.cardId,
     created_at: new Date() || expenseExtract?.created_at,
   } as ITransactionsCard);
 
@@ -66,10 +50,10 @@ export default function ExpenseRegister() {
     setExpense({
       name: '',
       category: '',
-      value: '',
+      value: 0,
       date: '',
       type: '',
-      cardId: 0,
+      cardId: '',
     } as ITransactionsCard);
     resetCategory.current?.reset();
     resetCard.current?.reset();
@@ -77,7 +61,6 @@ export default function ExpenseRegister() {
   };
 
   const addNewExpense = async () => {
-    let formatValue = toNumber(expense?.value);
     setDelete(true);
 
     try {
@@ -102,7 +85,7 @@ export default function ExpenseRegister() {
       await newExpense.add({
         name: expense.name,
         category: expense.category,
-        value: formatValue,
+        value: expense.value,
         date: expense.date,
         type: expense.type,
         cardId: expense.cardId,
@@ -129,8 +112,6 @@ export default function ExpenseRegister() {
   };
 
   const updateExtract = async () => {
-    let formatValue = toNumber(expense?.value);
-
     setUpdate(true);
 
     try {
@@ -141,7 +122,7 @@ export default function ExpenseRegister() {
       await updateExpense.update({
         name: expense.name,
         category: expense.category,
-        value: formatValue,
+        value: expense.value,
         date: expense.date,
         type: expense.type,
         cardId: expense.cardId,
@@ -225,6 +206,8 @@ export default function ExpenseRegister() {
     );
   }
 
+  console.log('', expense.value);
+
   return (
     <Styled.Container
       behavior={Platform.OS == 'ios' ? 'padding' : 'height'}
@@ -260,9 +243,20 @@ export default function ExpenseRegister() {
           />
 
           <Styled.FormGroup>
-            <InputCustom
-              value={expenseExtract ? String(expense.value) : expense.value}
+            {/*  <InputCustom
+              value={
+                expenseExtract
+                  ? formatToNumber(expense.value).replace('R$', '')
+                  : expense.value
+              }
               type={'money'}
+              options={{
+                precision: 2,
+                separator: ',',
+                delimiter: '.',
+                decimalSeparator: '.',
+              }}
+              maxLength={10}
               mask
               placeholder="R$ 0,00"
               onChangeText={(text: string) => {
@@ -273,6 +267,24 @@ export default function ExpenseRegister() {
               }}
               keyboardType="numeric"
               width="47%"
+            /> */}
+
+            <CurrencyInput
+              style={style.input}
+              value={expense.value}
+              onChangeValue={(value: number) => {
+                setExpense({
+                  ...expense,
+                  value: value,
+                });
+              }}
+              placeholder="R$ 0,00"
+              placeholderTextColor={'#2c2c2c'}
+              prefix={'$ '}
+              signPosition="beforePrefix"
+              delimiter=","
+              precision={2}
+              separator="."
             />
 
             <InputCustom
@@ -296,13 +308,13 @@ export default function ExpenseRegister() {
 
           <Styled.FormGroup>
             <SelectDropdown
-              defaultValueByIndex={expenseExtract?.cardId - 1}
+              defaultValue={expenseExtract?.cardId}
               ref={resetCard}
               data={CardCategory}
               onSelect={(selectedItem, index) => {
                 setExpense({
                   ...expense,
-                  cardId: index + 1 || expenseExtract?.cardId,
+                  cardId: selectedItem,
                 });
               }}
               defaultButtonText={'Cartao usado'}
