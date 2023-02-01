@@ -1,7 +1,7 @@
 export const CategoryExpense = [
   'Alimentação',
   'Bebidas',
-  'Boleto/Faturas mensais',
+  'Boleto/Faturas',
   'Estética',
   'Pix',
   'Renda extra',
@@ -30,7 +30,7 @@ export const Categoria = [
   },
   {
     id: 3,
-    name: 'Boleto/Faturas mensais',
+    name: 'Boleto/Faturas',
   },
   {
     id: 4,

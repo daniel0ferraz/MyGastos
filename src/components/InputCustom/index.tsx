@@ -1,6 +1,5 @@
 import React, {ReactElement, useState} from 'react';
 import {TextInputMask, TextInputMaskProps} from 'react-native-masked-text';
-import {View} from 'react-native';
 
 import * as Styled from './styles';
 import * as Icone from 'phosphor-react-native';

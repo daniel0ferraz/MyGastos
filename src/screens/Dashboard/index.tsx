@@ -21,7 +21,7 @@ import {User} from '../../@types/User';
 //Styles
 import * as Styled from './styles';
 import {useTheme} from 'styled-components/native';
-import {formatToBRL} from 'brazilian-values';
+import {formatToBRL, parseToNumber} from 'brazilian-values';
 import {API} from '../../config';
 
 export default function Dashboard() {
@@ -36,7 +36,7 @@ export default function Dashboard() {
     (data: ITransactionsCard) => data.type === 'Gastos',
   );
   const valorDespesas = filterValorGastos?.reduce(
-    (soma, item: ITransactionsCard) => soma + parseFloat(item.value),
+    (soma, item: ITransactionsCard) => soma + Number(item?.value),
     0,
   );
 
@@ -44,7 +44,7 @@ export default function Dashboard() {
     (data: ITransactionsCard) => data.type === 'Entrada',
   );
   const valorEntradas = filterValorEntradas?.reduce(
-    (soma, item: ITransactionsCard) => soma + parseFloat(item.value),
+    (soma, item: ITransactionsCard) => soma + Number(item?.value),
     0,
   );
 

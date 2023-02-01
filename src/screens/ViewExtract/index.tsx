@@ -75,9 +75,7 @@ export default function ViewExtract() {
                 size={65}
                 color={colorCard({cardId: item.cardId})}
               />
-              <Styled.NameCard>
-                {nameCard({cardId: item.cardId})}
-              </Styled.NameCard>
+              <Styled.NameCard>{item.cardId}</Styled.NameCard>
             </Styled.BoxInfoCard>
           </Styled.BoxRowCard>
 
