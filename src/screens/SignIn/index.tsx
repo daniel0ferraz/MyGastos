@@ -54,7 +54,7 @@ export default function SignIn() {
         });
 
         Toast.show({
-          text1: 'Sucesso!',
+          text1: 'Login efetuado com sucesso!',
           position: 'bottom',
           type: 'success',
         });

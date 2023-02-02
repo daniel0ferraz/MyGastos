@@ -65,7 +65,14 @@ export const MonthSelectIcon = styled.View`
 
 export const Month = styled.Text`
   font-family: ${({theme}) => theme.fonts.Lexend500};
-  font-size: ${RFValue(20)}px;
+  font-size: ${RFValue(18)}px;
+  color: ${({theme}) => theme.colors.gray600};
+  text-transform: uppercase;
+`;
+
+export const TextInfo = styled.Text`
+  font-family: ${({theme}) => theme.fonts.Lexend500};
+  font-size: ${RFValue(16)}px;
   color: ${({theme}) => theme.colors.gray600};
 `;
 
@@ -73,7 +80,7 @@ export const SectionHistoric = styled.View`
   ${({theme}) => css`
     width: 100%;
     //padding: ${ms(10)}px;
-    margin-top: ${ms(43)}px;
+    margin-top: ${ms(10)}px;
     background: ${theme.colors.white};
     border-radius: 12px;
   `}
@@ -105,7 +112,7 @@ export const Content = styled.View`
   `}
 `;
 
-export const ContentLegend = styled.ScrollView`
+export const ContentLegend = styled.View`
   ${({theme}) => css`
     width: 100%;
 

@@ -32,6 +32,7 @@ import {
   BoxGroup,
   BoxError,
   Error,
+  TextInfo,
 } from './style';
 import * as Icon from 'phosphor-react-native';
 import ListHistoric from '../../components/Historic/ListHistoric/Index';
@@ -141,9 +142,15 @@ export default function Resume() {
     );
   };
 
-  const dataForPieChart = aggregateOnSimpleObjectArray(
+  /* const dataForPieChart = aggregateOnSimpleObjectArray(
     extrato,
     'category',
+    'value',
+  ); */
+
+  const dataForPieChart = aggregateOnSimpleObjectArray(
+    extrato,
+    'cardId',
     'value',
   );
 
@@ -167,7 +174,11 @@ export default function Resume() {
             <Icon.CaretLeft size={30} color={THEME.colors.gray600} />
           </MonthSelectButton>
 
-          <Month>{format(selectedDate, 'MMMM - yyyy', {locale: ptBR})}</Month>
+          <Month>
+            {format(selectedDate, 'MMMM - yyyy', {
+              locale: ptBR,
+            })}
+          </Month>
 
           <MonthSelectButton onPress={() => handleChangeDate('next')}>
             <Icon.CaretRight size={30} color={THEME.colors.gray600} />
@@ -182,14 +193,16 @@ export default function Resume() {
               y="value"
               height={220}
               animate={{
-                easing: 'poly',
+                easing: 'bounce',
               }}
               colorScale={dataForPieChart.map((item: any) =>
-                colorCategory({category: item.category}),
+                colorCard({
+                  cardId: item.cardId,
+                }),
               )}
               padAngle={({datum}) => datum.y}
               innerRadius={100}
-              cornerRadius={6}
+              cornerRadius={4}
               style={{
                 labels: {
                   display: 'none',
@@ -198,29 +211,40 @@ export default function Resume() {
             />
           </View>
 
-          {dataForPieChart.length === 0 ? (
-            <>
-              <BoxError>
+          <BoxError>
+            {dataForPieChart.length === 0 ? (
+              <>
                 <Icon.ChartPieSlice size={35} color={THEME.colors.gray2} />
                 <ErrorData>Nenhum registro encontrado.</ErrorData>
-              </BoxError>
+              </>
+            ) : null}
+          </BoxError>
+
+          {dataForPieChart.length > 0 ? (
+            <>
+              <View
+                style={{
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                }}>
+                <TextInfo>Cartões mais usados</TextInfo>
+              </View>
             </>
           ) : null}
-
           <ContentLegend>
             {dataForPieChart.map((item: any, index: any) => (
               <>
-                <BoxGroup key={item.category}>
+                <BoxGroup key={item.cardId}>
                   <BoxIconLegend>
                     <BoxLegend
                       style={{
-                        backgroundColor: colorCategory({
-                          category: item.category,
+                        backgroundColor: colorCard({
+                          cardId: item.cardId,
                         }),
                       }}
                     />
 
-                    <Legend>{item.category}</Legend>
+                    <Legend>{item.cardId}</Legend>
                   </BoxIconLegend>
 
                   <BoxTextLegend>

@@ -40,7 +40,7 @@ export const BoxIcon = styled.View`
 
 export const TitleHeader = styled.Text`
   ${({theme}) => css`
-    font-size: ${ms(22)}px;
+    font-size: ${ms(20)}px;
     font-family: ${theme.fonts.Lexend700};
     color: ${theme.colors.gray};
     padding-left: 13px;

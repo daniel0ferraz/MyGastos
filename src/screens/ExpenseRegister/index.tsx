@@ -217,7 +217,7 @@ export default function ExpenseRegister() {
               <Icon.Wallet size={30} />
             </Styled.BoxIcon>
             <Styled.TitleHeader>
-              {routes?.params ? 'Editar extrato' : 'Registrar '}
+              {routes?.params ? 'Editar extrato' : 'Registrar extrato '}
             </Styled.TitleHeader>
           </Styled.BoxTitle>
 

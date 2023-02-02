@@ -119,7 +119,7 @@ export const colorCard = (data: {cardId: string}) => {
       return THEME.colors.cards.neon;
     }
 
-    case 'Neon': {
+    case 'Next': {
       return THEME.colors.cards.next;
     }
 
