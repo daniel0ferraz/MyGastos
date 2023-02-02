@@ -206,8 +206,6 @@ export default function ExpenseRegister() {
     );
   }
 
-  console.log('', expense.value);
-
   return (
     <Styled.Container
       behavior={Platform.OS == 'ios' ? 'padding' : 'height'}
@@ -216,15 +214,15 @@ export default function ExpenseRegister() {
         <Styled.Header>
           <Styled.BoxTitle>
             <Styled.BoxIcon>
-              <Icon.Receipt size={30} />
+              <Icon.Wallet size={30} />
             </Styled.BoxIcon>
             <Styled.TitleHeader>
-              {routes?.params ? 'Editar gasto' : 'Registrar gasto'}
+              {routes?.params ? 'Editar extrato' : 'Registrar '}
             </Styled.TitleHeader>
           </Styled.BoxTitle>
 
           <TouchableOpacity onPress={() => navigation.goBack()}>
-            <Icon.ArrowLeft size={35} />
+            <Icon.ArrowLeft size={30} />
           </TouchableOpacity>
         </Styled.Header>
 
@@ -232,7 +230,7 @@ export default function ExpenseRegister() {
           <Input
             sizeInput={'100%'}
             value={expense.name}
-            placeholder="Nome do registro"
+            placeholder="Nome "
             keyboardType="default"
             onChangeText={text => {
               setExpense({
@@ -243,32 +241,6 @@ export default function ExpenseRegister() {
           />
 
           <Styled.FormGroup>
-            {/*  <InputCustom
-              value={
-                expenseExtract
-                  ? formatToNumber(expense.value).replace('R$', '')
-                  : expense.value
-              }
-              type={'money'}
-              options={{
-                precision: 2,
-                separator: ',',
-                delimiter: '.',
-                decimalSeparator: '.',
-              }}
-              maxLength={10}
-              mask
-              placeholder="R$ 0,00"
-              onChangeText={(text: string) => {
-                setExpense({
-                  ...expense,
-                  value: text,
-                });
-              }}
-              keyboardType="numeric"
-              width="47%"
-            /> */}
-
             <CurrencyInput
               style={style.input}
               value={expense.value}
@@ -294,7 +266,7 @@ export default function ExpenseRegister() {
                 format: 'DD/MM/YYYY',
               }}
               mask
-              placeholder="Data"
+              placeholder="00/00/0000"
               onChangeText={(text: string) => {
                 setExpense({
                   ...expense,

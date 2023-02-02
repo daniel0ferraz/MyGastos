@@ -1,6 +1,6 @@
 import React, {useCallback, useEffect, useRef, useState} from 'react';
 
-import {Text, TouchableOpacity, View} from 'react-native';
+import {Text, TouchableOpacity, View, ScrollView} from 'react-native';
 
 import firestore, {firebase} from '@react-native-firebase/firestore';
 import {colorCard, colorCategory} from '../../utils/Icons';
@@ -30,6 +30,8 @@ import {
   LegendValue,
   BoxLegend,
   BoxGroup,
+  BoxError,
+  Error,
 } from './style';
 import * as Icon from 'phosphor-react-native';
 import ListHistoric from '../../components/Historic/ListHistoric/Index';
@@ -40,6 +42,7 @@ import {API} from '../../config';
 import {formatToBRL, formatToNumber} from 'brazilian-values';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import Filter2 from '../../components/Filter2';
+import {ErrorData} from '../../components/Historic/ListHistoric/styles';
 
 export default function Resume() {
   const navigation = useNavigation<NativeStackNavigationProp<any>>();
@@ -51,42 +54,59 @@ export default function Resume() {
 
   const THEME = useTheme();
 
-  /* function handleChangeDate(action: 'next' | 'prev') {
+  function handleChangeDate(action: 'next' | 'prev') {
     if (action === 'next') {
       setSelectedDate(addMonths(selectedDate, 1));
     } else {
       setSelectedDate(subMonths(selectedDate, 1));
     }
-  } */
+  }
 
-  /* let primeiroDay = format(
+  let primeiroDay = format(
     startOfMonth(selectedDate),
     "dd/MM/yyyy'",
   ).toString();
 
   let ultimoDiaMes = format(endOfMonth(selectedDate), "dd/MM/yyyy'").toString();
- */
+
   useFocusEffect(
     useCallback(() => {
       setIsLoading(true);
       let subscriber = firestore()
         .collection(`${API}`)
-        .orderBy('created_at', 'desc')
-
-        .onSnapshot(querySnapshot => {
-          const data = querySnapshot.docs.map(doc => {
+        .get()
+        .then(snapshot => {
+          const data = snapshot.docs.map(doc => {
             return {
               id: doc.id,
               ...doc.data(),
             };
           }) as ITransactionsCard[];
 
-          setExtrato(data);
+          function converteData(DataDDMMYY) {
+            const dataSplit = DataDDMMYY.split('/');
+            const novaData = new Date(
+              parseInt(dataSplit[2], 10),
+              parseInt(dataSplit[1], 10) - 1,
+              parseInt(dataSplit[0], 10),
+            );
+            return novaData;
+          }
+
+          let dataInicial = converteData(primeiroDay);
+          let dataFinal = converteData(ultimoDiaMes);
+
+          let objetosFiltrados = data.filter(result => {
+            return (
+              converteData(result.date) >= dataInicial &&
+              converteData(result.date) <= dataFinal
+            );
+          });
+
+          setExtrato(objetosFiltrados);
           setIsLoading(false);
         });
-
-      return () => subscriber();
-    }, []),
+    }, [selectedDate]),
   );
 
   // Código inspirado em https://www.tutorialspoint.com/aggregate-records-in-javascript
@@ -132,7 +152,7 @@ export default function Resume() {
       <Header>
         <BoxTitle>
           <BoxIcon>
-            <Icon.ChartLineUp size={30} />
+            <Icon.ChartPieSlice size={30} />
           </BoxIcon>
           <TitleHeader>Resumo</TitleHeader>
         </BoxTitle>
@@ -142,58 +162,55 @@ export default function Resume() {
         </TouchableOpacity>
       </Header>
       <SectionHistoric>
-        {/*    
         <MonthSelect>
           <MonthSelectButton onPress={() => handleChangeDate('prev')}>
             <Icon.CaretLeft size={30} color={THEME.colors.gray600} />
           </MonthSelectButton>
 
-          <Month>{format(selectedDate, 'MMMM, yyyy', {locale: ptBR})}</Month>
+          <Month>{format(selectedDate, 'MMMM - yyyy', {locale: ptBR})}</Month>
 
           <MonthSelectButton onPress={() => handleChangeDate('next')}>
             <Icon.CaretRight size={30} color={THEME.colors.gray600} />
           </MonthSelectButton>
-        </MonthSelect> */}
+        </MonthSelect>
 
         <Content>
-          {isLoading === true ? (
-            <View
-              style={{
-                marginTop: 120,
-                flex: 1,
-                justifyContent: 'center',
-                alignItems: 'center',
-              }}>
-              <Loading />
-            </View>
-          ) : (
+          <View>
             <VictoryPie
               data={dataForPieChart}
               x="cardId"
               y="value"
-              height={200}
+              height={220}
               animate={{
-                easing: 'elastic',
+                easing: 'poly',
               }}
               colorScale={dataForPieChart.map((item: any) =>
                 colorCategory({category: item.category}),
               )}
               padAngle={({datum}) => datum.y}
               innerRadius={100}
-              cornerRadius={10}
-              padding={26}
+              cornerRadius={6}
               style={{
                 labels: {
                   display: 'none',
                 },
               }}
             />
-          )}
+          </View>
+
+          {dataForPieChart.length === 0 ? (
+            <>
+              <BoxError>
+                <Icon.ChartPieSlice size={35} color={THEME.colors.gray2} />
+                <ErrorData>Nenhum registro encontrado.</ErrorData>
+              </BoxError>
+            </>
+          ) : null}
 
           <ContentLegend>
-            {dataForPieChart.map((item: any) => (
+            {dataForPieChart.map((item: any, index: any) => (
               <>
-                <BoxGroup>
+                <BoxGroup key={item.category}>
                   <BoxIconLegend>
                     <BoxLegend
                       style={{
@@ -202,6 +219,7 @@ export default function Resume() {
                         }),
                       }}
                     />
+
                     <Legend>{item.category}</Legend>
                   </BoxIconLegend>
 
@@ -212,12 +230,6 @@ export default function Resume() {
               </>
             ))}
           </ContentLegend>
-
-          {dataForPieChart.length === 0 ? (
-            <>
-              <Text>Nenhum registro encontrado</Text>
-            </>
-          ) : null}
         </Content>
       </SectionHistoric>
     </Container>

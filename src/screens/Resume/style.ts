@@ -16,7 +16,7 @@ export const Header = styled.View`
     flex-direction: row;
     align-items: center;
     justify-content: space-between;
-    padding-top: ${theme.sizes[20]}px;
+    padding-top: ${theme.sizes[22]}px;
     margin-bottom: ${theme.sizes[20]}px;
   `}
 `;
@@ -25,7 +25,6 @@ export const BoxTitle = styled.View`
   flex-direction: row;
   align-items: center;
   justify-content: center;
-  padding-top: 20px;
 `;
 
 export const BoxIcon = styled.View`
@@ -41,7 +40,7 @@ export const BoxIcon = styled.View`
 
 export const TitleHeader = styled.Text`
   ${({theme}) => css`
-    font-size: ${ms(20)}px;
+    font-size: ${ms(22)}px;
     font-family: ${theme.fonts.Lexend700};
     color: ${theme.colors.gray};
     padding-left: 13px;
@@ -106,14 +105,12 @@ export const Content = styled.View`
   `}
 `;
 
-export const ContentLegend = styled.View`
+export const ContentLegend = styled.ScrollView`
   ${({theme}) => css`
     width: 100%;
-    height: 160px;
-    justify-content: center;
 
     background-color: ${theme.colors.white};
-    margin-top: ${ms(25)}px;
+    margin-top: ${ms(5)}px;
     padding: 18px;
     border-radius: 12px;
   `}
@@ -165,5 +162,17 @@ export const LegendValue = styled.Text`
     color: ${theme.colors.gray2};
 
     font-family: ${theme.fonts.Lexend500};
+  `}
+`;
+
+export const BoxError = styled.View`
+  ${({theme}) => css`
+    // flex: 1;
+    margin-top: -${ms(10)}px;
+    align-items: center;
+    justify-content: center;
+
+    padding: 10px;
+    border-radius: 12px;
   `}
 `;

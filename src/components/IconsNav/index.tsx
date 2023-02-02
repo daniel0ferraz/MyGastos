@@ -8,10 +8,12 @@ import * as Styled from './styles';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 //Navigation
 import {useNavigation} from '@react-navigation/native';
+import {useTheme} from 'styled-components/native';
 const {width} = Dimensions.get('window');
 
 export default function IconsNav() {
   const navigation = useNavigation<NativeStackNavigationProp<any>>();
+  const THEME = useTheme();
 
   return (
     <Styled.Container
@@ -29,14 +31,14 @@ export default function IconsNav() {
       <Styled.Content>
         <Styled.BoxIcons
           onPress={() => navigation.navigate('RegisterNewExpense')}>
-          <Icon.Wallet size={25} />
+          <Icon.Wallet size={30} color={THEME.colors.gray} />
         </Styled.BoxIcons>
         <Styled.Label>Carteira</Styled.Label>
       </Styled.Content>
 
       <Styled.Content>
         <Styled.BoxIcons onPress={() => navigation.navigate('Resume')}>
-          <Icon.ChartLineUp size={25} />
+          <Icon.ChartPieSlice size={30} color={THEME.colors.gray} />
         </Styled.BoxIcons>
         <Styled.Label>Resumo</Styled.Label>
       </Styled.Content>

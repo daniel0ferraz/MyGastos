@@ -23,7 +23,7 @@ export const Content = styled.View`
 export const BoxIcons = styled.TouchableOpacity`
   ${({theme}) => css`
     width: ${ms(45)}px;
-    height: ${ms(45)}px;
+    // height: ${ms(45)}px;
     background: ${theme.colors.white};
     align-items: center;
     justify-content: center;
@@ -34,7 +34,7 @@ export const BoxIcons = styled.TouchableOpacity`
 export const Label = styled.Text`
   ${({theme}) => css`
     font-size: ${ms(15)}px;
-    padding-top: 1px;
+    padding-top: 5px;
     font-family: ${theme.fonts.Lexend700};
     color: ${theme.colors.gray};
   `}

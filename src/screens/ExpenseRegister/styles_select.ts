@@ -5,7 +5,7 @@ import theme from '../../styles/theme';
 export const styles = StyleSheet.create({
   // select1
   dropdown1BtnStyle: {
-    width: '48%',
+    width: '47%',
     height: 60,
     backgroundColor: theme.colors.light,
     borderRadius: 8,

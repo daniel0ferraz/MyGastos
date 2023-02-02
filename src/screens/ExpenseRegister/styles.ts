@@ -16,7 +16,7 @@ export const Header = styled.View`
     flex-direction: row;
     align-items: center;
     justify-content: space-between;
-    padding-top: ${theme.sizes[20]}px;
+    padding-top: ${ms(25)}px;
     margin-bottom: ${theme.sizes[20]}px;
   `}
 `;
@@ -25,7 +25,6 @@ export const BoxTitle = styled.View`
   flex-direction: row;
   align-items: center;
   justify-content: center;
-  padding-top: 20px;
 `;
 
 export const BoxIcon = styled.View`
@@ -41,7 +40,7 @@ export const BoxIcon = styled.View`
 
 export const TitleHeader = styled.Text`
   ${({theme}) => css`
-    font-size: ${ms(20)}px;
+    font-size: ${ms(22)}px;
     font-family: ${theme.fonts.Lexend700};
     color: ${theme.colors.gray};
     padding-left: 13px;

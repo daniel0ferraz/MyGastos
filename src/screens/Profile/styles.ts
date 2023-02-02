@@ -48,3 +48,23 @@ export const IconPhoto = styled.TouchableOpacity`
 export const BtnSpace = styled.View`
   padding-top: ${ms(20)}px;
 `;
+
+export const BoxTitle = styled.View`
+  padding-bottom: ${ms(25)}px;
+`;
+export const TitleModal = styled.Text`
+  ${({theme}) => css`
+    font-size: ${ms(16)}px;
+    font-family: ${theme.fonts.Lexend600};
+    color: ${theme.colors.white};
+  `}
+`;
+
+export const TitleIcon = styled.Text`
+  ${({theme}) => css`
+    padding-top: 20px;
+    font-size: ${ms(10)}px;
+    font-family: ${theme.fonts.Lexend600};
+    color: ${theme.colors.white};
+  `}
+`;

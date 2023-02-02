@@ -16,11 +16,14 @@ import InputCustom from '../../components/InputCustom';
 import * as Icon from 'phosphor-react-native';
 import {
   BoxProfile,
+  BoxTitle,
   BtnSpace,
   Container,
   ContentPhoto,
   Goback,
   IconPhoto,
+  TitleIcon,
+  TitleModal,
 } from './styles';
 
 import {useNavigation, useRoute} from '@react-navigation/native';
@@ -312,6 +315,9 @@ export function Profile() {
         backgroundStyle={{backgroundColor: THEME.colors.gray}}
         handleIndicatorStyle={{backgroundColor: THEME.colors.white}}>
         <View style={styles.contentContainer}>
+          <BoxTitle>
+            <TitleModal>Atualizar Foto</TitleModal>
+          </BoxTitle>
           <View style={styles.contentContent}>
             <IconPhoto onPress={choosePhotoFromCamera}>
               <Icon.Camera size={29} color={THEME.colors.light} />
