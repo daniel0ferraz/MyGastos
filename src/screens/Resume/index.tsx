@@ -31,19 +31,16 @@ import {
   BoxLegend,
   BoxGroup,
   BoxError,
-  Error,
+
   TextInfo,
 } from './style';
 import * as Icon from 'phosphor-react-native';
-import ListHistoric from '../../components/Historic/ListHistoric/Index';
-import Loading from '../../components/Loading';
-import {Filter} from '../../components/Filter';
 import {useTheme} from 'styled-components/native';
 import {API} from '../../config';
-import {formatToBRL, formatToNumber} from 'brazilian-values';
+import {formatToBRL} from 'brazilian-values';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
-import Filter2 from '../../components/Filter2';
 import {ErrorData} from '../../components/Historic/ListHistoric/styles';
+import { converteData } from '../../utils/dateConvert';
 
 export default function Resume() {
   const navigation = useNavigation<NativeStackNavigationProp<any>>();
@@ -84,15 +81,6 @@ export default function Resume() {
             };
           }) as ITransactionsCard[];
 
-          function converteData(DataDDMMYY) {
-            const dataSplit = DataDDMMYY.split('/');
-            const novaData = new Date(
-              parseInt(dataSplit[2], 10),
-              parseInt(dataSplit[1], 10) - 1,
-              parseInt(dataSplit[0], 10),
-            );
-            return novaData;
-          }
 
           let dataInicial = converteData(primeiroDay);
           let dataFinal = converteData(ultimoDiaMes);
@@ -142,11 +130,6 @@ export default function Resume() {
     );
   };
 
-  /* const dataForPieChart = aggregateOnSimpleObjectArray(
-    extrato,
-    'category',
-    'value',
-  ); */
 
   const dataForPieChart = aggregateOnSimpleObjectArray(
     extrato,
