@@ -35,7 +35,6 @@ type IOpcao = (typeof Categoria)[0];
 
 export function Filter({selectedCategory, setFiltro, filteredDate}: Props) {
   const THEME = useTheme();
-  const [isActive, setIsActive] = useState(false);
   const [selectedDate, setSelectedDate] = useState(new Date());
 
 
@@ -62,18 +61,8 @@ export function Filter({selectedCategory, setFiltro, filteredDate}: Props) {
           <TitleHistoric>Movimentações</TitleHistoric>
 
 
-          <OpenFilter
-           onPress={() => {
-            setIsActive(!isActive);
-          }}
-          >
-            <Icon.FunnelSimple/>
-
-            </OpenFilter>
-
-
-
-          <FilterIcon
+          
+             <FilterIcon
             onPress={() => {
               handleChangeDate('prev');
             }}>
@@ -90,6 +79,11 @@ export function Filter({selectedCategory, setFiltro, filteredDate}: Props) {
             }}>
             <Icon.CaretRight />
           </FilterIcon>
+          
+
+
+
+         
           
         </ContainerHeader>
 
