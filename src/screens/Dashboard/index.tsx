@@ -23,12 +23,22 @@ import * as Styled from './styles';
 import {useTheme} from 'styled-components/native';
 import {formatToBRL, parseToNumber} from 'brazilian-values';
 import {API} from '../../config';
+import {endOfMonth, format, startOfMonth} from 'date-fns';
+import { converteData } from '../../utils/dateConvert';
 
 export default function Dashboard() {
   const [loading, setLoading] = useState(false);
   const [credentials, setCredentials] = useState<User>({} as User);
   const [extrato, setExtrato] = useState<ITransactionsCard[]>([]);
   const [filter, setFilter] = useState<string | 'Todo'>('Tudo');
+  const [selectedDate, setSelectedDate] = useState(new Date());
+
+  let primeiroDay = format(
+    startOfMonth(selectedDate),
+    "dd/MM/yyyy'",
+  ).toString();
+
+  let ultimoDiaMes = format(endOfMonth(selectedDate), "dd/MM/yyyy'").toString();
 
   const THEME = useTheme();
 
@@ -65,16 +75,28 @@ export default function Dashboard() {
             };
           }) as ITransactionsCard[];
 
+          let dataInicial = converteData(primeiroDay);
+          let dataFinal = converteData(ultimoDiaMes);
+
+          let objetosFiltrados = data.filter(result => {
+            return (
+              converteData(result.date) >= dataInicial &&
+              converteData(result.date) <= dataFinal
+            );
+          });
+
           if (filter === 'Tudo') {
-            setExtrato(data);
+            setExtrato(objetosFiltrados);
           } else {
-            setExtrato(data.filter(item => item.category === filter));
+            setExtrato(
+              objetosFiltrados.filter(item => item.category === filter),
+            );
           }
           setLoading(false);
         });
 
       return () => subscriber();
-    }, [filter]),
+    }, [filter, selectedDate]),
   );
 
   useFocusEffect(
@@ -145,7 +167,13 @@ export default function Dashboard() {
 
       <Styled.SectionHistoric>
         <Styled.HeaderHistoric>
-          <Filter setFiltro={setFilter} selectedCategory={filter} />
+          <Filter
+            setFiltro={setFilter}
+            selectedCategory={filter}
+            filteredDate={date => {
+              setSelectedDate(date);
+            }}
+          />
         </Styled.HeaderHistoric>
 
         <Styled.Content>

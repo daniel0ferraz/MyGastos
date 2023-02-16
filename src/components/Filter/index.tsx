@@ -9,7 +9,8 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import {Text} from 'react-native';
+import {addMonths, subMonths, format, endOfMonth, startOfMonth} from 'date-fns';
+import {ptBR} from 'date-fns/locale';
 
 import {useTheme} from 'styled-components/native';
 import {
@@ -18,24 +19,39 @@ import {
   Container,
   ContainerHeader,
   ContentItens,
+  DateFilter,
   FilterIcon,
+  OpenFilter,
   TitleHistoric,
 } from './styles';
 
 type Props = {
   selectedCategory: string | 'Tudo';
   setFiltro: React.Dispatch<React.SetStateAction<string | 'Tudo'>>;
+  filteredDate: (date: Date) => void;
 };
 
 type IOpcao = (typeof Categoria)[0];
 
-export function Filter({selectedCategory, setFiltro}: Props) {
+export function Filter({selectedCategory, setFiltro, filteredDate}: Props) {
   const THEME = useTheme();
-  const [isActive, setIsActive] = useState(false);
+  const [selectedDate, setSelectedDate] = useState(new Date());
+
 
   function selecionarFiltro(category: IOpcao) {
     if (selectedCategory === category.name) return setFiltro('Tudo');
     return setFiltro(category.name);
+  }
+
+  filteredDate(selectedDate) 
+  function handleChangeDate(action: 'next' | 'prev') {
+    if (action === 'next') {
+      setSelectedDate(addMonths(selectedDate, 1));
+      
+    } else {
+      setSelectedDate(subMonths(selectedDate, 1));
+      
+    }
   }
 
   return (
@@ -44,12 +60,31 @@ export function Filter({selectedCategory, setFiltro}: Props) {
         <ContainerHeader>
           <TitleHistoric>Movimentações</TitleHistoric>
 
+
+          
+             <FilterIcon
+            onPress={() => {
+              handleChangeDate('prev');
+            }}>
+            <Icon.CaretLeft  />
+          </FilterIcon>
+
+          <DateFilter>{format(selectedDate, " MMM 'de' yyyy'", {
+              locale: ptBR,
+            })}</DateFilter>
+
           <FilterIcon
             onPress={() => {
-              setIsActive(!isActive);
+              handleChangeDate('next');
             }}>
-            {/*   <Icon.FunnelSimple size={32} /> */}
+            <Icon.CaretRight />
           </FilterIcon>
+          
+
+
+
+         
+          
         </ContainerHeader>
 
         <View>

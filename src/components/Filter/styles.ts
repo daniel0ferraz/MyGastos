@@ -3,7 +3,7 @@ import styled, {css} from 'styled-components/native';
 
 export const Container = styled.View``;
 
-export const ContainerHeader = styled.TouchableOpacity`
+export const ContainerHeader = styled.View`
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
@@ -17,10 +17,27 @@ export const TitleHistoric = styled.Text`
   `}
 `;
 
+export const OpenFilter= styled.TouchableOpacity`
+  align-items: center;
+  justify-content: center;
+`;
+
 export const FilterIcon = styled.TouchableOpacity`
   align-items: center;
   justify-content: center;
 `;
+
+export const DateFilter = styled.Text`
+  ${({theme}) => css`
+    font-size: ${theme.sizes[12]}px;
+    color: ${theme.colors.dark};
+    font-family: ${theme.fonts.Lexend500};
+    
+  
+  `}
+`
+
+
 
 export const ContentItens = styled.View`
   align-items: center;
