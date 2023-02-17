@@ -1,12 +1,18 @@
-## Libs
+# 📱 Meus Gastos
+Meus Gastos é um app que registra entrada e gastos pessoais em cartões, obtendo extrato do controle financeiro.
 
-## Atualizar versão
+## 📑 Funcionalidades do App
 
-mudar em package.json "version": "numberVersion"
-npx react-native-version --never-amend
+• Login, Cadastro e Esqueci minha senha (enviando email para redefinição de senha).
+• Criar novo extrato e Listagem de extrato possibilitando filtrar por categoria.
+• Ver detalhes do extrato, possibilitado editar ou excluir.
+• Atualizar informações no perfil do usuário.
+• Resumo com gráfico informando cartões mais usados no mês.
 
-## Gerar versão
+## 🤖 Tecnologias
 
-react-native bundle --platform android --dev false --entry-file index.js --bundle-output android/app/src/main/assets/index.android.bundle --assets-dest android/app/src/main/res
-
-./gradlew assembleDebug
+O App foi desenvolvido com React Native + Styled Components + Typescript + e alguns dos serviços do Firebase:
+• Firebase Authentication.
+• Cloud Firestore.
+• Cloud Storage.
+• App Distribution.
