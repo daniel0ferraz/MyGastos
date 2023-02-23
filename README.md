@@ -1,3 +1,6 @@
+![App Screenshot](.github/cover.png)
+
+
 # 📱 Meus Gastos
 Meus Gastos é um app que registra entrada e gastos pessoais em cartões, obtendo extrato do controle financeiro.
 
