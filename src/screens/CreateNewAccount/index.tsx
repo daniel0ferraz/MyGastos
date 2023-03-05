@@ -36,7 +36,7 @@ export function CreateNewAccount() {
 
   const [newUser, setNewUser] = useState({
     photo: '',
-    avatar: '',
+    avatar: 'https://www.tenforums.com/geek/gars/images/2/types/thumb_15951118880user.png',
     name: '',
     email: '',
     password: '',
@@ -52,7 +52,7 @@ export function CreateNewAccount() {
     }).then(image => {
       setNewUser({
         ...newUser,
-        avatar: image.path,
+        photo: image.path,
       });
       bottomSheetRef.current?.close();
     });
@@ -72,8 +72,14 @@ export function CreateNewAccount() {
     });
   };
 
+
+  
   const createAccount = async () => {
     setLoading(true);
+
+    const ref = storage().ref(`profile/${newUser.name}`);
+    const path = newUser.photo;
+  
     try {
       if (
         newUser.email === '' ||
@@ -93,52 +99,19 @@ export function CreateNewAccount() {
           type: 'error',
         });
         return;
+      } else if (newUser.photo === '') {
+        Toast.show({
+          text1: 'Selecione uma foto',
+          position: 'bottom',
+          type: 'error',
+        });
+        return;
       }
 
-      const newAccount = await auth().createUserWithEmailAndPassword(
-        newUser.email,
-        newUser.password,
-      );
-
-      if (newAccount) {
-      }
-    } catch (error: any) {
-      const errorCode = error.code;
-      Toast.show({
-        text1: VerifyErroCode(errorCode),
-        position: 'bottom',
-        type: 'error',
-        visibilityTime: 5000,
-      });
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const createAccountFirestore = async () => {
-    const {avatar} = newUser;
-    setLoading(true);
-
-    const ref = firebase.storage().ref(`profile/${newUser.name}`);
-    const path = avatar;
-    const task = ref.putFile(path, {
-      cacheControl: 'no-store', // disable caching
-    });
-
-    const dowload = storage()
-      .ref(`${newUser?.name}`)
-      .getDownloadURL()
-      .then(url => {
-        if (url) {
-          setNewUser({
-            ...newUser,
-            photo: url,
-          });
-        }
+      await ref.putFile(path, {
+        cacheControl: 'no-store', 
       });
 
-    try {
-      await task;
       const url = await ref.getDownloadURL();
 
       if (url) {
@@ -157,9 +130,15 @@ export function CreateNewAccount() {
           photo: url,
           name: newUser.name,
           email: newUser.email,
-          password: newUser.password,
-          confirmPassword: newUser.confirmPassword,
         });
+
+      } else {
+        Toast.show({
+          type: 'error',
+          text1: 'Erro',
+          text2: 'Erro ao criar conta',
+        });
+        return;
       }
     } catch (error: any) {
       const errorCode = error.code;
@@ -191,7 +170,7 @@ export function CreateNewAccount() {
         <ContentPhoto>
           <BoxProfile>
             <Image
-              source={{uri: newUser.avatar ? newUser.avatar : ''}}
+              source={{uri: newUser.photo ? newUser.photo : newUser.avatar}}
               style={{height: 130, width: 130, borderRadius: 15}}
               resizeMode="contain"
             />
@@ -258,10 +237,8 @@ export function CreateNewAccount() {
         <Button
           size="Large"
           style={{backgroundColor: '#323238'}}
-          disabled={
-            !newUser.email || !newUser.password || !newUser.confirmPassword
-          }
-          onPress={createAccountFirestore}
+         
+          onPress={createAccount}
           isLoading={loading}>
           Cadastrar
         </Button>
