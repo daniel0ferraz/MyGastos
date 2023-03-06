@@ -28,64 +28,22 @@ import {
 type Props = {
   selectedCategory: string | 'Tudo';
   setFiltro: React.Dispatch<React.SetStateAction<string | 'Tudo'>>;
-  filteredDate: (date: Date) => void;
+
 };
 
 type IOpcao = (typeof Categoria)[0];
 
-export function Filter({selectedCategory, setFiltro, filteredDate}: Props) {
+export function Filter({selectedCategory, setFiltro}: Props) {
   const THEME = useTheme();
-  const [selectedDate, setSelectedDate] = useState(new Date());
-
 
   function selecionarFiltro(category: IOpcao) {
     if (selectedCategory === category.name) return setFiltro('Tudo');
     return setFiltro(category.name);
   }
-
-  filteredDate(selectedDate) 
-  function handleChangeDate(action: 'next' | 'prev') {
-    if (action === 'next') {
-      setSelectedDate(addMonths(selectedDate, 1));
-      
-    } else {
-      setSelectedDate(subMonths(selectedDate, 1));
-      
-    }
-  }
-
   return (
     <>
       <Container>
-        <ContainerHeader>
-          <TitleHistoric>Movimentações</TitleHistoric>
-
-
-          
-             <FilterIcon
-            onPress={() => {
-              handleChangeDate('prev');
-            }}>
-            <Icon.CaretLeft  />
-          </FilterIcon>
-
-          <DateFilter>{format(selectedDate, " MMM 'de' yyyy'", {
-              locale: ptBR,
-            })}</DateFilter>
-
-          <FilterIcon
-            onPress={() => {
-              handleChangeDate('next');
-            }}>
-            <Icon.CaretRight />
-          </FilterIcon>
-          
-
-
-
-         
-          
-        </ContainerHeader>
+        
 
         <View>
           <ScrollView

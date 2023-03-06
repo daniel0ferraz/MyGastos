@@ -101,14 +101,19 @@ export const TextInfoCards = styled.Text`
 `;
 
 export const SectionHistoric = styled.View`
-  ${({theme}) => css`
     flex: 1;
-
     margin-top: ${ms(40)}px;
-  `}
 `;
 
-export const HeaderHistoric = styled.View`
+export const BoxInfoAndFilter = styled.View`
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  padding: ${ms(10)}px;
+`;
+
+
+export const BoxFilter = styled.View`
   ${({theme}) => css`
     margin-top: ${ms(5)}px;
     margin-bottom: ${ms(5)}px;
@@ -119,13 +124,28 @@ export const HeaderHistoric = styled.View`
   `}
 `;
 
+export const ContainerHeader = styled.View`
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+`;
+
 export const TitleHistoric = styled.Text`
   ${({theme}) => css`
     font-size: ${theme.sizes[20]}px;
     color: ${theme.colors.dark};
     font-family: ${theme.fonts.Lexend500};
+    padding-bottom: 5px;
   `}
 `;
+
+export const SectionFilterDate = styled.View`
+  ${({theme}) => css`
+    flex-direction: row;
+    align-items: center;
+  `}
+`;
+
 
 export const FilterIcon = styled.TouchableOpacity``;
 

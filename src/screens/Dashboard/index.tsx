@@ -23,8 +23,10 @@ import * as Styled from './styles';
 import {useTheme} from 'styled-components/native';
 import {formatToBRL, parseToNumber} from 'brazilian-values';
 import {API} from '../../config';
-import {endOfMonth, format, startOfMonth} from 'date-fns';
-import { converteData } from '../../utils/dateConvert';
+import {addMonths, endOfMonth, format, startOfMonth, subMonths} from 'date-fns';
+import {converteData} from '../../utils/dateConvert';
+import {DateFilter, FilterIcon} from '../../components/Filter/styles';
+import {ptBR} from 'date-fns/locale';
 
 export default function Dashboard() {
   const [loading, setLoading] = useState(false);
@@ -59,6 +61,14 @@ export default function Dashboard() {
   );
 
   let valorTotal = valorEntradas;
+
+  function handleChangeDate(action: 'next' | 'prev') {
+    if (action === 'next') {
+      setSelectedDate(addMonths(selectedDate, 1));
+    } else {
+      setSelectedDate(subMonths(selectedDate, 1));
+    }
+  }
 
   useFocusEffect(
     useCallback(() => {
@@ -162,19 +172,42 @@ export default function Dashboard() {
         </Styled.SectionCards>
         <Styled.SectionMenu>
           <IconsNav />
-        </Styled.SectionMenu>
-      </Styled.Container>
+            </Styled.SectionMenu>
+          </Styled.Container>
 
       <Styled.SectionHistoric>
-        <Styled.HeaderHistoric>
-          <Filter
-            setFiltro={setFilter}
-            selectedCategory={filter}
-            filteredDate={date => {
-              setSelectedDate(date);
-            }}
-          />
-        </Styled.HeaderHistoric>
+        <Styled.BoxInfoAndFilter>
+          <Styled.ContainerHeader>
+            <Styled.TitleHistoric>Movimentações</Styled.TitleHistoric>
+          </Styled.ContainerHeader>
+
+          <Styled.SectionFilterDate>
+            <FilterIcon
+              onPress={() => {
+                handleChangeDate('prev');
+              }}>
+              <Icon.CaretLeft />
+            </FilterIcon>
+
+            <DateFilter>
+              {format(selectedDate, " MMM 'de' yyyy'", {
+                locale: ptBR,
+              })}
+            </DateFilter>
+
+            <FilterIcon
+              onPress={() => {
+                handleChangeDate('next');
+              }}>
+              <Icon.CaretRight />
+            </FilterIcon>
+          </Styled.SectionFilterDate>
+        </Styled.BoxInfoAndFilter>
+
+
+        <Styled.BoxFilter>
+          <Filter setFiltro={setFilter} selectedCategory={filter} />
+        </Styled.BoxFilter>
 
         <Styled.Content>
           {loading === true ? (
