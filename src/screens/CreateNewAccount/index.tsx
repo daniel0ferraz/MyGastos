@@ -29,6 +29,7 @@ import firestore, {firebase} from '@react-native-firebase/firestore';
 
 import storage from '@react-native-firebase/storage';
 import {User} from '../../@types/User';
+import { saveImage } from '../../services/uploadPhoto';
 const {width, height} = Dimensions.get('window');
 
 export function CreateNewAccount() {
@@ -77,7 +78,7 @@ export function CreateNewAccount() {
   const createAccount = async () => {
     setLoading(true);
 
-    const ref = storage().ref(`profile/${newUser.name}`);
+    const ref = storage().ref(`profile/${newUser.email}`);
     const path = newUser.photo;
   
     try {

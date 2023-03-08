@@ -40,6 +40,8 @@ import {useTheme} from 'styled-components/native';
 import {User} from '../../@types/User';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import FastImage from 'react-native-fast-image';
+import {VerifyErroCode} from '../../utils/errorCodes';
+import {saveImage} from '../../services/uploadPhoto';
 
 const {width, height} = Dimensions.get('window');
 
@@ -56,6 +58,7 @@ export function Profile() {
     name: dataUser?.name || '',
     email: dataUser?.email || '',
     phone: dataUser?.phone || '',
+    newCapiture: '',
   });
 
   const [isUpdate, setIsUpdate] = useState(false);
@@ -70,6 +73,7 @@ export function Profile() {
       setUserInfo({
         ...userInfo,
         photo: image.path,
+        newCapiture: image.path,
       });
       bottomSheetRef.current?.close();
     });
@@ -84,77 +88,35 @@ export function Profile() {
       setUserInfo({
         ...userInfo,
         photo: image.path,
+        newCapiture: image.path,
       });
       bottomSheetRef.current?.close();
     });
   };
 
-  const updateProfileUser = async () => {
-    setIsUpdate(true);
-    setTransferred(0);
-
-    const task = storage()
-      .ref(`profile/${userInfo?.name}`)
-      .putFile(userInfo?.photo);
-    const dowload = storage()
-      .ref(`profile/${userInfo?.name}`)
-      .getDownloadURL()
-      .then(url => {
-        if (url) {
-          setUserInfo({
-            ...userInfo,
-            photo: url,
-          });
-        }
-      });
-
-    task.on('state_changed', taskSnapshot => {
-      setTransferred(
-        Math.round(taskSnapshot.bytesTransferred / taskSnapshot.totalBytes) *
-          100,
-      );
-
-      Toast.show({
-        text1: `${transferred}% Carregado`,
-        visibilityTime: 5000,
-        position: 'bottom',
-        type: 'success',
-      });
-    });
-    task.then(() => {
-      Toast.show({
-        text1: 'Imagem carregada com sucesso!',
-        visibilityTime: 5000,
-        type: 'success',
-        position: 'bottom',
-      });
-    });
+  const updateUserCredentiais = async (newPhoto: string) => {
+    const collectionReference = firebase
+      .firestore()
+      .collection('users')
+      .doc(`${dataUser.id}`);
 
     try {
-      await task;
-      await dowload;
-
-      Toast.show({
-        text1: 'Foto de perfil atualizada com sucesso!',
-        visibilityTime: 5000,
-        type: 'success',
-        position: 'bottom',
+      await collectionReference.update({
+        photo: newPhoto,
+        name: userInfo.name,
+        phone: userInfo.phone,
       });
     } catch (error) {
       Toast.show({
-        text1: 'algo deu errado, tente novamente!',
-        visibilityTime: 5000,
         type: 'error',
-        position: 'bottom',
+        text1: 'Erro ao atualizar',
+        text2: 'Tente novamente mais tarde',
       });
-    } finally {
-      setIsUpdate(false);
-      setTransferred(0);
     }
   };
 
   const updateAccount = async () => {
-    const {photo} = userInfo;
+    const {newCapiture} = userInfo;
     setIsUpdate(true);
 
     if (userInfo.name === '' || userInfo.photo === '') {
@@ -167,66 +129,29 @@ export function Profile() {
       return;
     }
 
-    const ref = firebase.storage().ref(`profile/${dataUser.name}`);
-    const path = photo;
-    const task = ref.putFile(path, {
-      cacheControl: 'no-store', // disable caching
-    });
-
-    const dowload = storage()
-      .ref(`${dataUser.name}`)
-      .getDownloadURL()
-      .then(url => {
-        if (url) {
-          setUserInfo({
-            ...userInfo,
-            photo: url,
-          });
-        }
-      })
-      .catch(error => {});
-
     try {
-      await task;
-      const url = await ref.getDownloadURL();
+      const res = await saveImage(newCapiture, dataUser.email);
 
-      if (url) {
-        const collectionReference = firebase
-          .firestore()
-          .collection('users')
-          .doc(`${dataUser.id}`);
-
-        await collectionReference.update({
-          photo: url,
-          name: userInfo.name,
-        });
-
-        firebase
-          .auth()
-          ?.currentUser?.reload()
-          .then(() => {
-            Toast.show({
-              text1: 'Foto de perfil atualizada com sucesso!',
-              visibilityTime: 5000,
-              type: 'success',
-              position: 'bottom',
-            });
-
-            setUserInfo({
-              photo: '',
-              name: '',
-              email: '',
-              phone: '',
-            });
-
-            navigation.replace('Dashboard');
-          });
+      if (!res) {
+        updateUserCredentiais(userInfo.photo);
+      } else {
+        updateUserCredentiais(res);
       }
+
+      Toast.show({
+        text1: 'Perfil atualizado com sucesso!',
+        visibilityTime: 5000,
+        type: 'success',
+        position: 'bottom',
+        onPress: () => {
+          navigation.replace('Dashboard');
+        },
+      });
     } catch (error: any) {
       const errorCode = error.code;
 
       Toast.show({
-        text1: 'VerifyErroCode(errorCode)',
+        text1: `${VerifyErroCode(errorCode)}`,
         position: 'bottom',
         type: 'error',
         visibilityTime: 5000,
