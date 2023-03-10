@@ -15,19 +15,17 @@ export const Container = styled.View`
   `}
 `;
 
-export const Content = styled.View`
+export const Content = styled.TouchableOpacity`
   align-items: center;
   justify-content: center;
 `;
 
-export const BoxIcons = styled.TouchableOpacity`
+export const BoxIcons = styled.View`
   ${({theme}) => css`
     width: ${ms(45)}px;
-    // height: ${ms(45)}px;
     background: ${theme.colors.white};
     align-items: center;
     justify-content: center;
-    border-radius: ${ms(12)}px;
   `}
 `;
 
