@@ -22,8 +22,10 @@ export const ContentItens = styled.View`
   align-items: center;
   justify-content: center;
   flex-direction: row;
-  margin-top: 15px;
-  padding-bottom: 5px;
+  //margin-top: 15px;
+ // padding-bottom: 5px;
+ padding: 10px;
+
 `;
 
 export const Button = styled.TouchableOpacity`

@@ -28,16 +28,16 @@ export default function IconsNav() {
 
         elevation: 12,
       }}>
-      <Styled.Content>
+      <Styled.Content onPress={() => navigation.navigate('RegisterNewExpense')}>
         <Styled.BoxIcons
-          onPress={() => navigation.navigate('RegisterNewExpense')}>
+         >
           <Icon.Wallet size={30} color={THEME.colors.gray} />
         </Styled.BoxIcons>
         <Styled.Label>Carteira</Styled.Label>
       </Styled.Content>
 
-      <Styled.Content>
-        <Styled.BoxIcons onPress={() => navigation.navigate('Resume')}>
+      <Styled.Content onPress={() => navigation.navigate('Resume')}>
+        <Styled.BoxIcons >
           <Icon.ChartPieSlice size={30} color={THEME.colors.gray} />
         </Styled.BoxIcons>
         <Styled.Label>Resumo</Styled.Label>

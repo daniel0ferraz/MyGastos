@@ -2,33 +2,13 @@ import React, {useState, useRef} from 'react';
 
 import * as Icon from 'phosphor-react-native';
 import {Categoria} from '../../services/mock';
-import {
-  Dimensions,
-  ScrollView,
-  StyleSheet,
-  TouchableOpacity,
-  View,
-} from 'react-native';
-import {addMonths, subMonths, format, endOfMonth, startOfMonth} from 'date-fns';
-import {ptBR} from 'date-fns/locale';
-
+import {ScrollView, View} from 'react-native';
 import {useTheme} from 'styled-components/native';
-import {
-  Button,
-  ButtonText,
-  Container,
-  ContainerHeader,
-  ContentItens,
-  DateFilter,
-  FilterIcon,
-  OpenFilter,
-  TitleHistoric,
-} from './styles';
+import {Button, ButtonText, Container, ContentItens} from './styles';
 
 type Props = {
   selectedCategory: string | 'Tudo';
   setFiltro: React.Dispatch<React.SetStateAction<string | 'Tudo'>>;
-
 };
 
 type IOpcao = (typeof Categoria)[0];
@@ -43,8 +23,6 @@ export function Filter({selectedCategory, setFiltro}: Props) {
   return (
     <>
       <Container>
-        
-
         <View>
           <ScrollView
             showsHorizontalScrollIndicator={false}
