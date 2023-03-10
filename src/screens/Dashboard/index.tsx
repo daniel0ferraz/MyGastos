@@ -85,10 +85,16 @@ export default function Dashboard() {
             };
           }) as ITransactionsCard[];
 
+
+          let extratoUsuario = data.filter(
+            (data: ITransactionsCard) =>
+              data.userId === firebase.auth().currentUser?.uid,
+          );
+          
           let dataInicial = converteData(primeiroDay);
           let dataFinal = converteData(ultimoDiaMes);
 
-          let objetosFiltrados = data.filter(result => {
+          let objetosFiltrados = extratoUsuario.filter(result => {
             return (
               converteData(result.date) >= dataInicial &&
               converteData(result.date) <= dataFinal

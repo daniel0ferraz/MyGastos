@@ -7,4 +7,5 @@ export type ITransactionsCard = {
   type: string;
   cardId: string;
   created_at?: Date;
+  userId?: string;
 };

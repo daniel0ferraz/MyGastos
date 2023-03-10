@@ -92,6 +92,7 @@ export default function ExpenseRegister() {
         created_at: new Date(
           new Date().toString().split('GMT')[0] + ' UTC',
         ).toISOString(),
+        userId: firebase.auth().currentUser?.uid,
       });
 
       Toast.show({
